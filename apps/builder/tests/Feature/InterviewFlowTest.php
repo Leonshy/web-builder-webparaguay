@@ -39,6 +39,8 @@ class InterviewFlowTest extends TestCase
 
                 return ['site_ref' => 'rt_'.$project->id, 'preview_url' => 'http://runtime.test/s/tok'];
             }
+
+            public function markPublished(string $siteRef, string $fqdn): void {}
         });
     }
 

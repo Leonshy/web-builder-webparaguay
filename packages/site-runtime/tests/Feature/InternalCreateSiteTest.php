@@ -63,4 +63,19 @@ class InternalCreateSiteTest extends TestCase
             ->postJson('/internal/sites', ['builder_project_ref' => 'x', 'name' => 'x', 'document' => ['pages' => []]])
             ->assertStatus(422);
     }
+
+    public function test_marca_el_sitio_como_publicado_en_un_dominio(): void
+    {
+        $ref = $this->withToken('secreto-de-prueba')
+            ->postJson('/internal/sites', ['builder_project_ref' => 'p9', 'name' => 'X', 'document' => $this->doc()])
+            ->json('site_ref');
+
+        $this->withToken('secreto-de-prueba')
+            ->postJson("/internal/sites/{$ref}/publish", ['fqdn' => 'talleresyvytu.webparaguay.com'])
+            ->assertOk();
+
+        $site = Site::find($ref);
+        $this->assertSame('talleresyvytu.webparaguay.com', $site->published_domain);
+        $this->assertNotNull($site->published_at);
+    }
 }

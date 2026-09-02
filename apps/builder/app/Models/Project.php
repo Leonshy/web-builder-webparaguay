@@ -40,4 +40,14 @@ class Project extends Model
     {
         return $this->hasMany(AiUsage::class);
     }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function backofficeTasks(): HasMany
+    {
+        return $this->hasMany(BackofficeTask::class);
+    }
 }

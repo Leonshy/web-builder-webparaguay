@@ -6,6 +6,7 @@ use App\Http\Controllers\Cms\CmsPreviewController;
 use App\Http\Controllers\Cms\CmsSectionController;
 use App\Http\Controllers\ContactStubController;
 use App\Http\Controllers\Internal\CreateSiteController;
+use App\Http\Controllers\Internal\MarkPublishedController;
 use App\Http\Controllers\PreviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,7 @@ Route::get('/s/{token}/{slug?}', CmsPreviewController::class)
 
 // API interna: apps/builder entrega el documento generado y validado.
 Route::post('/internal/sites', CreateSiteController::class)->name('internal.sites.create');
+Route::post('/internal/sites/{site}/publish', MarkPublishedController::class)->name('internal.sites.publish');
 
 // CMS. Formularios derivados del esquema; toda escritura valida antes de guardar.
 Route::prefix('cms')->group(function () {

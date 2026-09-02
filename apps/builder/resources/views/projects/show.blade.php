@@ -11,7 +11,13 @@
             <a class="wf-link" href="{{ route('interview', $project) }}"><span class="btn">Empezar la entrevista</span></a>
         @elseif($draft->stage === 'done')
             <strong>Sitio generado</strong>
-            <p><a href="{{ route('interview.result', $project) }}">Ver el resultado y el preview</a></p>
+            <p><a href="{{ route('interview.result', $project) }}">Ver el resultado y el preview</a>
+                @if($project->status === 'published')
+                    · <a href="{{ route('publish.show', $project) }}">En línea ↗</a>
+                @else
+                    · <a class="wf-link" href="{{ route('publish.show', $project) }}"><span class="btn" style="padding:4px 10px;font-size:13px">Publicar</span></a>
+                @endif
+            </p>
         @else
             <strong>Entrevista en curso</strong> <span class="mut">(etapa: {{ $draft->stage }})</span>
             <p><a class="wf-link" href="{{ route('interview', $project) }}">Continuar</a></p>

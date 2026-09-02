@@ -16,4 +16,7 @@ interface SiteRuntimeClient
      * @return array{site_ref:string, preview_url:string}
      */
     public function createSite(Project $project, string $name, array $document): array;
+
+    /** Informa a site-runtime que el sitio quedó publicado en un dominio. */
+    public function markPublished(string $siteRef, string $fqdn): void;
 }

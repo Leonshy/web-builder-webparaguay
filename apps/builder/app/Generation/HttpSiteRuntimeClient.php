@@ -26,4 +26,14 @@ final class HttpSiteRuntimeClient implements SiteRuntimeClient
             'preview_url' => (string) $response['preview_url'],
         ];
     }
+
+    public function markPublished(string $siteRef, string $fqdn): void
+    {
+        $base = rtrim((string) config('generation.site_runtime_url'), '/');
+
+        Http::withToken((string) config('generation.site_runtime_token'))
+            ->timeout(30)
+            ->post("{$base}/internal/sites/{$siteRef}/publish", ['fqdn' => $fqdn])
+            ->throw();
+    }
 }

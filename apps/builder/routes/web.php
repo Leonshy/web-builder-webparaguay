@@ -21,3 +21,8 @@ Route::prefix('projects/{project}/interview')->group(function () {
     Route::post('/generate', [InterviewController::class, 'generate'])->name('interview.generate');
     Route::get('/result', [InterviewController::class, 'result'])->name('interview.result');
 });
+
+use App\Http\Controllers\PublishController;
+
+Route::get('/projects/{project}/publish', [PublishController::class, 'show'])->name('publish.show');
+Route::post('/projects/{project}/publish', [PublishController::class, 'store'])->name('publish.store');

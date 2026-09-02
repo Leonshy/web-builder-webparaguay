@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f53d5d2ff537e524796c118fe62a61c",
+    "content-hash": "cc83606cf00dd3ebbf2dd3a5f9d5bea0",
     "packages": [
         {
             "name": "brick/math",
@@ -6210,6 +6210,50 @@
                 }
             ],
             "time": "2026-04-26T05:33:54+00:00"
+        },
+        {
+            "name": "webparaguay/provisioning",
+            "version": "0.1.0",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/provisioning",
+                "reference": "8d39fabb69ec08c9eab45e9104168599384dc0f2"
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.8",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webparaguay\\Provisioning\\": "src/"
+                },
+                "classmap": [
+                    "src/Values.php",
+                    "src/Contracts.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Webparaguay\\Provisioning\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ]
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Capa de abstracción sobre WHMCS y Plesk. Nada del resto del sistema llama a esas APIs directamente (ADR-001, regla 16 del CLAUDE.md).",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "webparaguay/schema",
