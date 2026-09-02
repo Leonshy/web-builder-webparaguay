@@ -58,17 +58,24 @@ final class ClaudeGenerator implements Generator
         $response = Http::withHeaders([
             'x-api-key' => $key,
             'anthropic-version' => '2023-06-01',
-        ])->timeout(120)->post('https://api.anthropic.com/v1/messages', [
+        ])->timeout(180)->post('https://api.anthropic.com/v1/messages', [
             'model' => $model,
             'max_tokens' => 8000,
-            'system' => $this->systemPrompt(),
+            // El contrato es grande y estable: se cachea entre generaciones.
+            'system' => [[
+                'type' => 'text',
+                'text' => $this->systemPrompt(),
+                'cache_control' => ['type' => 'ephemeral'],
+            ]],
             'messages' => [['role' => 'user', 'content' => $userContent]],
         ])->throw()->json();
 
         $usage = $response['usage'] ?? [];
         $this->usage->record(
             $organization, $project, $action, $model,
-            (int) ($usage['input_tokens'] ?? 0),
+            (int) ($usage['input_tokens'] ?? 0)
+                + (int) ($usage['cache_creation_input_tokens'] ?? 0)
+                + (int) ($usage['cache_read_input_tokens'] ?? 0),
             (int) ($usage['output_tokens'] ?? 0),
         );
 
@@ -93,29 +100,76 @@ final class ClaudeGenerator implements Generator
     private function systemPrompt(): string
     {
         $schema = json_encode(Schema::decoded(), JSON_UNESCAPED_SLASHES);
+        $example = json_encode(
+            json_decode((string) file_get_contents(Schema::examplePath()), true),
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT,
+        );
+        $variants = $this->variantCheatSheet();
+        $icons = implode(', ', Schema::decoded()['$defs']['icon']['enum']);
 
         return <<<PROMPT
-        Sos un configurador de sitios. NUNCA escribís código: producís un único
-        objeto JSON que valida EXACTAMENTE contra este JSON Schema:
+        Sos un configurador de sitios web para PYMES paraguayas. NUNCA escribís
+        código ni HTML de layout: producís UN ÚNICO objeto JSON que valida
+        EXACTAMENTE contra este JSON Schema.
 
+        <schema>
         {$schema}
+        </schema>
 
-        Reglas (van literales):
-        1. Nunca inventes campos. Sólo los del contrato.
-        2. Nunca excedas los límites de longitud.
-        3. Íconos sólo del enum `icon` del esquema.
-        4. Variantes sólo de la lista de cada tipo.
-        5. Un valor omitido es válido; uno inventado no.
-        6. Colores: sólo los 4 obligatorios (primary, accent, background, text).
-        7. Tipografía: sólo la clave `typography.pairing` que venga en el brief.
+        VARIANTES VÁLIDAS POR TIPO (elegí sólo de acá):
+        {$variants}
+
+        ÍCONOS VÁLIDOS (clave `icon`, elegí sólo de acá):
+        {$icons}
+
+        REGLAS DURAS (una violación invalida toda la salida):
+        1. Sólo campos del contrato. Un campo desconocido invalida la salida.
+        2. Nunca excedas los `maxLength` / `maxItems` / `minItems`.
+        3. `variant` sólo de la lista de arriba para ese `type`.
+        4. `content` debe cumplir el sub-esquema del tipo (`content_<type>` en
+           `\$defs`), con sus campos `required`.
+        5. Un valor omitido es válido; uno inventado no. Si falta información en
+           el brief, omití el campo opcional. Prohibido inventar datos de
+           contacto, teléfonos, direcciones o testimonios.
+        6. `theme.colors`: SÓLO los 4 del brief (primary, accent, background,
+           text). No agregues los derivados.
+        7. `theme.typography.pairing`: exactamente el string del brief.
         8. No repitas el `title` del envelope dentro de `content`.
-        9. Todo el texto en español paraguayo neutro.
-        10. `alt` de imagen obligatorio y descriptivo; nunca el nombre del archivo.
-        11. Prohibido copy de negocio real como relleno. Si falta info, omití el campo.
+        9. Todo el texto en español paraguayo neutro, claro y concreto.
+        10. `image.alt` obligatorio y descriptivo (qué se ve), nunca el nombre
+            de archivo. Para imágenes usá `src: ""` si no hay una real.
+        11. `richtext` (campos `body`, `answer`): sólo `<p> <strong> <em> <ul>
+            <ol> <li> <a> <br> <h3> <h4>`.
+        12. `entity_grid` sólo con `source: "manual"` y `items`.
+        13. `video.video_url` sólo YouTube o Vimeo.
+        14. Cada página necesita ≥1 sección. La home lleva un `hero`. Las
+            páginas interiores empiezan con `page_header`.
 
-        La navegación, el breadcrumb y el layout global los deriva el renderer:
-        no los generes. Devolvé SÓLO el JSON.
+        NO generes: navegación, breadcrumb, sitemap. Los deriva el renderer.
+        `layout.navbar` / `layout.footer` sí van, con sus variantes.
+
+        EJEMPLO de un documento VÁLIDO (misma forma, otro rubro):
+        <ejemplo>
+        {$example}
+        </ejemplo>
+
+        Salida: SÓLO el objeto JSON, sin ```json, sin texto antes ni después.
         PROMPT;
+    }
+
+    private function variantCheatSheet(): string
+    {
+        $section = Schema::decoded()['$defs']['section']['allOf'] ?? [];
+        $lines = [];
+        foreach ($section as $branch) {
+            $type = $branch['if']['properties']['type']['const'] ?? null;
+            $vs = $branch['then']['properties']['variant']['enum'] ?? null;
+            if ($type && $vs) {
+                $lines[] = "  {$type}: ".implode(' | ', $vs);
+            }
+        }
+
+        return implode("\n", $lines);
     }
 
     /** @return array<string,mixed> */

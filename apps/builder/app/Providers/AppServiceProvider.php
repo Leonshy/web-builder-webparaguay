@@ -10,13 +10,16 @@ use App\Generation\TemplateGenerator;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
+use Webparaguay\Provisioning\BillingGateway;
+use Webparaguay\Provisioning\DomainRegistrar;
 use Webparaguay\Provisioning\Fake\FakeBillingGateway;
 use Webparaguay\Provisioning\Fake\FakeDomainRegistrar;
 use Webparaguay\Provisioning\Fake\FakeHostingProvisioner;
+use Webparaguay\Provisioning\HostingProvisioner;
+use Webparaguay\Provisioning\Plesk\PleskHostingProvisioner;
 use Webparaguay\Provisioning\Provisioner;
 use Webparaguay\Provisioning\Whmcs\WhmcsBillingGateway;
 use Webparaguay\Provisioning\Whmcs\WhmcsDomainRegistrar;
-use Webparaguay\Provisioning\Plesk\PleskHostingProvisioner;
 use Webparaguay\Schema\SchemaValidator;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,14 +37,16 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(SiteRuntimeClient::class, HttpSiteRuntimeClient::class);
 
-        $this->app->singleton(Provisioner::class, function () {
+        $this->app->singleton(BillingGateway::class, function () {
             $wp = config('publishing.whmcs');
 
-            $billing = config('publishing.billing_driver') === 'whmcs'
+            return config('publishing.billing_driver') === 'whmcs'
                 ? new WhmcsBillingGateway($wp['url'], $wp['identifier'], $wp['secret'])
                 : new FakeBillingGateway();
+        });
 
-            $hosting = config('publishing.hosting_driver') === 'plesk'
+        $this->app->singleton(HostingProvisioner::class, function () {
+            return config('publishing.hosting_driver') === 'plesk'
                 ? new PleskHostingProvisioner(
                     config('publishing.plesk.url'),
                     config('publishing.plesk.api_key'),
@@ -50,13 +55,22 @@ class AppServiceProvider extends ServiceProvider
                     config('publishing.git_repo_url'),
                 )
                 : new FakeHostingProvisioner(config('publishing.subdomain_base'));
+        });
 
-            $domains = config('publishing.billing_driver') === 'whmcs'
+        $this->app->singleton(DomainRegistrar::class, function () {
+            $wp = config('publishing.whmcs');
+
+            return config('publishing.billing_driver') === 'whmcs'
                 ? new WhmcsDomainRegistrar($wp['url'], $wp['identifier'], $wp['secret'])
                 : new FakeDomainRegistrar();
-
-            return new Provisioner($billing, $hosting, $domains, config('publishing.runtime_version'));
         });
+
+        $this->app->singleton(Provisioner::class, fn ($app) => new Provisioner(
+            $app->make(BillingGateway::class),
+            $app->make(HostingProvisioner::class),
+            $app->make(DomainRegistrar::class),
+            config('publishing.runtime_version'),
+        ));
     }
 
     public function boot(): void

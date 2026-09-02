@@ -21,7 +21,13 @@
             @endif
         </div>
         @foreach($project->backofficeTasks->where('status', 'open') as $t)
-            <div class="card"><span class="mut">Back-office ({{ $t->kind }}):</span> {{ $t->note }}</div>
+            <div class="card">
+                <span class="mut">Back-office ({{ $t->kind }}):</span> {{ $t->note }}
+                @if($t->kind === 'domain_compy_register')
+                    <div class="mut">Al completarse el registro:
+                        <code>php artisan builder:complete-domain-task {{ $t->id }}</code></div>
+                @endif
+            </div>
         @endforeach
         @foreach($project->payments as $p)
             <div class="card mut">Pago: {{ $p->currency }} {{ number_format($p->amount, 0, ',', '.') }} · {{ $p->status }} · {{ $p->concept }}</div>

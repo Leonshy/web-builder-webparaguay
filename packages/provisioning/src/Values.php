@@ -64,6 +64,7 @@ final class DomainOutcome
     public const SUBDOMAIN_LIVE = 'subdomain_live';
     public const GTLD_LIVE = 'gtld_live';
     public const COMPY_PENDING = 'compy_pending';   // sitio vivo en subdominio, .com.py en trámite
+    public const COMPY_LIVE = 'compy_live';
 
     public function __construct(
         public readonly string $status,
