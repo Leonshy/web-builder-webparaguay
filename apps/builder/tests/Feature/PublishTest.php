@@ -20,7 +20,7 @@ class PublishTest extends TestCase
         $user->markEmailAsVerified();
         $this->actingAs($user);
         $project = $org->projects()->create(['user_id' => $user->id, 'name' => 'Sitio', 'status' => 'generated']);
-        $project->site()->create(['name' => 'Talleres Yvytu', 'runtime_site_ref' => '7', 'preview_url' => 'http://rt/s/x']);
+        $project->site()->create(['name' => 'Talleres Yvytu', 'runtime_site_ref' => '7', 'preview_url' => 'http://rt/s/x', 'document' => json_decode((string) file_get_contents(\Webparaguay\Schema\Schema::examplePath()), true)]);
 
         $this->app->bind(SiteRuntimeClient::class, FakeSiteRuntimeClient::class);
 
