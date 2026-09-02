@@ -27,12 +27,14 @@ final class ActivateOrder
 
         abort_unless($site->document, 422, 'No hay documento generado para sembrar en la instancia.');
 
-        // Con WHMCS: confirmar que Plesk ya provisionó la suscripción.
+        // Con WHMCS: aceptar la orden (auto-setup) y esperar a que Plesk
+        // provisione la suscripción.
         if (config('publishing.hosting_driver') === 'whmcs') {
-            $whmcs = app(WhmcsProvisioner::class);
-            if (! $whmcs->serviceIsActive($project->user->email, (string) $site->whmcs_service_ref)) {
-                throw new RuntimeException("La orden #{$site->whmcs_order_ref} todavía no está activa en WHMCS.");
-            }
+            app(WhmcsProvisioner::class)->finalizeOrder(
+                $project->user->email,
+                (string) $site->whmcs_order_ref,
+                (string) $site->whmcs_service_ref,
+            );
         }
 
         $result = $this->runtime->createSite($project, $site->name, $site->document, $instanceUrl);

@@ -74,12 +74,7 @@ class AppServiceProvider extends ServiceProvider
             config('publishing.runtime_version'),
         ));
 
-        // El publicador: WHMCS nativo, o el compuesto (fakes en dev).
-        $this->app->singleton(SitePublisher::class, function ($app) {
-            if (config('publishing.hosting_driver') !== 'whmcs') {
-                return $app->make(Provisioner::class);
-            }
-
+        $this->app->singleton(WhmcsProvisioner::class, function () {
             $wp = config('publishing.whmcs');
 
             return new WhmcsProvisioner(
@@ -91,11 +86,16 @@ class AppServiceProvider extends ServiceProvider
                 runtimeVersion: config('publishing.runtime_version'),
                 paymentMode: config('publishing.payment_mode', 'manual'),
                 billingCycle: config('publishing.whmcs_billing_cycle', 'monthly'),
-                paymentMethod: config('publishing.whmcs_payment_method', 'mailin'),
+                paymentMethod: config('publishing.whmcs_payment_method', 'banktransfer'),
                 taxIdFieldId: (int) config('publishing.whmcs_cf_tax_id'),
                 companyFieldId: (int) config('publishing.whmcs_cf_company'),
             );
         });
+
+        // El publicador: WHMCS nativo, o el compuesto (fakes en dev).
+        $this->app->singleton(SitePublisher::class, fn ($app) => config('publishing.hosting_driver') === 'whmcs'
+            ? $app->make(WhmcsProvisioner::class)
+            : $app->make(Provisioner::class));
     }
 
     public function boot(): void

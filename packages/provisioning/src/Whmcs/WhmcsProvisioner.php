@@ -66,8 +66,9 @@ final class WhmcsProvisioner implements SitePublisher
         $subdomain = new DomainOutcome(DomainOutcome::SUBDOMAIN_LIVE, $fqdn);
 
         if ($this->paymentMode === 'auto') {
-            // El producto está en modo "On Payment": registrar el pago dispara
-            // el aprovisionamiento en Plesk. No hace falta AcceptOrder.
+            // Se asume el pago cobrado aparte (Bancard). Se registra en la
+            // factura y se acepta la orden con auto-setup (crea customer +
+            // suscripción en Plesk).
             if ($invoiceId === '') {
                 throw new ProvisioningException('WHMCS no devolvió una factura para la orden.');
             }
@@ -76,7 +77,7 @@ final class WhmcsProvisioner implements SitePublisher
                 'transid' => 'builder-'.$input->siteRef.'-'.time(),
                 'gateway' => $this->paymentMethod,
             ]);
-            $this->waitUntilActive($clientId, $serviceId);
+            $this->finalizeOrder($input->customerEmail, $orderId, $serviceId);
 
             return new PublishResult(
                 charge: new Charge(Charge::PAID, $invoiceId, $input->plan->price),
@@ -110,6 +111,34 @@ final class WhmcsProvisioner implements SitePublisher
         $clientId = $this->findClientId($clientEmail);
 
         return $clientId !== null && $this->serviceStatus($clientId, $serviceId) === 'Active';
+    }
+
+    /**
+     * Acepta la orden con auto-setup (dispara el módulo Plesk: crea el customer
+     * y la suscripción, igual que hacerlo a mano en el admin) y espera a que el
+     * servicio quede Active. Idempotente: si ya está aceptada/activa, no falla.
+     */
+    public function finalizeOrder(string $clientEmail, string $orderId, string $serviceId): void
+    {
+        $clientId = $this->findClientId($clientEmail);
+        if ($clientId === null) {
+            throw new ProvisioningException("No se encontró el cliente {$clientEmail} en WHMCS.");
+        }
+
+        if ($this->serviceStatus($clientId, $serviceId) !== 'Active') {
+            $res = $this->call('AcceptOrder', [
+                'orderid' => $orderId,
+                'autosetup' => true,
+                'sendemail' => false,
+            ]);
+            // "Order Already Active/Accepted" no es un error real.
+            if (($res['result'] ?? null) !== 'success'
+                && ! str_contains((string) ($res['message'] ?? ''), 'Already')) {
+                throw new ProvisioningException('WHMCS AcceptOrder falló: '.($res['message'] ?? 'desconocido'));
+            }
+        }
+
+        $this->waitUntilActive($clientId, $serviceId);
     }
 
     /** @param array<string,string> $billing */
