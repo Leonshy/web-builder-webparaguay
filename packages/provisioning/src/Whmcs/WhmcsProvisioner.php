@@ -118,11 +118,16 @@ final class WhmcsProvisioner implements SitePublisher
         }
 
         [$first, $last] = array_pad(explode(' ', trim($name), 2), 2, '');
+        // WHMCS sólo acepta dígitos y espacios en el teléfono.
+        $phone = isset($billing['phone'])
+            ? trim(preg_replace('/[^\d ]+/', '', $billing['phone']))
+            : null;
+
         $res = $this->call('AddClient', array_filter([
             'firstname' => $first ?: $name,
             'lastname' => $last ?: '-',
             'email' => $email,
-            'phonenumber' => $billing['phone'] ?? null,
+            'phonenumber' => $phone ?: null,
             'address1' => $billing['address'] ?? null,
             'city' => $billing['city'] ?? null,
             'state' => $billing['state'] ?? ($billing['city'] ?? null),
