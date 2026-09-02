@@ -92,6 +92,8 @@ class AppServiceProvider extends ServiceProvider
                 paymentMode: config('publishing.payment_mode', 'manual'),
                 billingCycle: config('publishing.whmcs_billing_cycle', 'monthly'),
                 paymentMethod: config('publishing.whmcs_payment_method', 'mailin'),
+                taxIdFieldId: (int) config('publishing.whmcs_cf_tax_id'),
+                companyFieldId: (int) config('publishing.whmcs_cf_company'),
             );
         });
     }

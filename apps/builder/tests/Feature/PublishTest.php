@@ -15,7 +15,7 @@ class PublishTest extends TestCase
 
     private function generatedProject(): Project
     {
-        $org = Organization::create(['name' => 'Org', 'billing_phone' => '+595 981 000 000', 'billing_address' => 'Palma 123', 'billing_city' => 'Asunción', 'billing_country' => 'PY']);
+        $org = Organization::create(['name' => 'Org', 'billing_phone' => '+595 981 000 000', 'billing_address' => 'Palma 123', 'billing_city' => 'Asunción', 'billing_country' => 'PY', 'billing_tax_id' => '80012345-6']);
         $user = $org->users()->create(['name' => 'Juan Metal', 'email' => 'juan@e.com.py', 'password' => bcrypt('x')]);
         $user->markEmailAsVerified();
         $this->actingAs($user);
@@ -60,7 +60,7 @@ class PublishTest extends TestCase
 
     public function test_no_se_puede_publicar_un_sitio_no_generado(): void
     {
-        $org = Organization::create(['name' => 'O', 'billing_phone' => '1', 'billing_address' => 'a', 'billing_city' => 'c', 'billing_country' => 'PY']);
+        $org = Organization::create(['name' => 'O', 'billing_phone' => '1', 'billing_address' => 'a', 'billing_city' => 'c', 'billing_country' => 'PY', 'billing_tax_id' => 'x']);
         $user = $org->users()->create(['name' => 'U', 'email' => 'u@e.com', 'password' => bcrypt('x')]);
         $user->markEmailAsVerified();
         $this->actingAs($user);

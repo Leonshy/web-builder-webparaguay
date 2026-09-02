@@ -68,10 +68,36 @@ class WhmcsCheck extends Command
 
         $rows = [];
         foreach ($products as $p) {
-            $rows[] = [$p['pid'] ?? '', $p['name'] ?? '', $p['type'] ?? '', $p['group'] ?? '', $p['paytype'] ?? ''];
+            if (($p['type'] ?? '') === 'hostingaccount') {
+                $rows[] = [$p['pid'] ?? '', $p['name'] ?? '', $p['group'] ?? '', $p['paytype'] ?? ''];
+            }
         }
-        $this->table(['pid', 'Nombre', 'Tipo', 'Grupo', 'Cobro'], $rows);
-        $this->line('→ Confirmá el pid del producto de hosting que vamos a usar (esperábamos 130 / "AI web").');
+        $this->table(['pid', 'Nombre', 'Grupo', 'Cobro'], $rows);
+
+        // Campos personalizados de cliente (para AddClient).
+        $this->newLine();
+        $this->line('Campos personalizados de cliente (de un cliente existente):');
+        $cf = Http::asForm()->post(rtrim($url, '/').'/includes/api.php', [
+            'identifier' => $identifier, 'secret' => $secret, 'responsetype' => 'json',
+            'action' => 'GetClients', 'limitnum' => 1,
+        ])->json();
+        $clientId = $cf['clients']['client'][0]['id'] ?? null;
+
+        if ($clientId) {
+            $det = Http::asForm()->post(rtrim($url, '/').'/includes/api.php', [
+                'identifier' => $identifier, 'secret' => $secret, 'responsetype' => 'json',
+                'action' => 'GetClientsDetails', 'clientid' => $clientId, 'stats' => false,
+            ])->json();
+            $fields = $det['customfields'] ?? [];
+            if ($fields) {
+                foreach ($fields as $f) {
+                    $this->line("  id={$f['id']}  «{$f['fieldname']}»  (valor actual: ".($f['value'] ?: '—').')');
+                }
+                $this->line('→ Pasame el id del campo "RUC o CI".');
+            } else {
+                $this->line('  (ese cliente no tiene campos personalizados cargados)');
+            }
+        }
 
         return self::SUCCESS;
     }

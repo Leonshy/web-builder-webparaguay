@@ -25,6 +25,8 @@ class PublishController extends Controller
     public function saveBilling(Request $request, Project $project)
     {
         $data = $request->validate([
+            'billing_tax_id' => 'required|string|max:30',
+            'billing_company' => 'nullable|string|max:120',
             'billing_phone' => 'required|string|max:40',
             'billing_address' => 'required|string|max:200',
             'billing_city' => 'required|string|max:80',

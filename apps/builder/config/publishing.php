@@ -25,6 +25,8 @@ return [
     'whmcs_product_id' => (int) env('WHMCS_PRODUCT_ID', 130),
     'whmcs_billing_cycle' => env('WHMCS_BILLING_CYCLE', 'monthly'),
     'whmcs_payment_method' => env('WHMCS_PAYMENT_METHOD', 'mailin'),
+    'whmcs_cf_tax_id' => (int) env('WHMCS_CF_TAX_ID', 1),  // id del campo personalizado 'RUC o CI'
+    'whmcs_cf_company' => (int) env('WHMCS_CF_COMPANY', 2), // id del campo 'Razón social'
 
     'plesk' => [
         'url' => env('PLESK_URL', ''),

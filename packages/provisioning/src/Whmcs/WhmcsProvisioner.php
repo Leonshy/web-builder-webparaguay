@@ -36,6 +36,8 @@ final class WhmcsProvisioner implements SitePublisher
         private string $paymentMode = 'manual',       // manual | auto
         private string $billingCycle = 'monthly',
         private string $paymentMethod = 'mailin',      // gateway de WHMCS (mailin = transferencia)
+        private int $taxIdFieldId = 0,                 // id del campo personalizado "RUC o CI"
+        private int $companyFieldId = 0,               // id del campo personalizado "Razón social"
         private int $pollAttempts = 20,
         private int $pollSleepSeconds = 6,
         private ?Client $http = null,
@@ -123,9 +125,18 @@ final class WhmcsProvisioner implements SitePublisher
             ? trim(preg_replace('/[^\d ]+/', '', $billing['phone']))
             : null;
 
+        $customFields = [];
+        if ($this->taxIdFieldId > 0 && ! empty($billing['tax_id'])) {
+            $customFields[$this->taxIdFieldId] = $billing['tax_id'];
+        }
+        if ($this->companyFieldId > 0 && ! empty($billing['companyname'])) {
+            $customFields[$this->companyFieldId] = $billing['companyname'];
+        }
+
         $res = $this->call('AddClient', array_filter([
             'firstname' => $first ?: $name,
             'lastname' => $last ?: '-',
+            'companyname' => $billing['companyname'] ?? null,
             'email' => $email,
             'phonenumber' => $phone ?: null,
             'address1' => $billing['address'] ?? null,
@@ -133,6 +144,7 @@ final class WhmcsProvisioner implements SitePublisher
             'state' => $billing['state'] ?? ($billing['city'] ?? null),
             'postcode' => $billing['postcode'] ?? null,
             'country' => $billing['country'] ?? 'PY',
+            'customfields' => $customFields !== [] ? base64_encode(serialize($customFields)) : null,
             'noemail' => true,
         ], fn ($v) => $v !== null && $v !== ''));
 

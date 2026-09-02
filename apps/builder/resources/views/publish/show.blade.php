@@ -43,7 +43,9 @@
             <p><strong>Datos de facturación</strong> <span class="mut">— los necesita el sistema de facturación</span></p>
             @php($o = $organization)
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-                <label>Teléfono *<br><input type="text" name="billing_phone" value="{{ old('billing_phone', $o->billing_phone) }}" required></label>
+                <label>RUC o CI *<br><input type="text" name="billing_tax_id" value="{{ old('billing_tax_id', $o->billing_tax_id) }}" placeholder="80012345-6" required></label>
+                <label>Razón social<br><input type="text" name="billing_company" value="{{ old('billing_company', $o->billing_company) }}"></label>
+                <label>Teléfono *<br><input type="text" name="billing_phone" value="{{ old('billing_phone', $o->billing_phone) }}" placeholder="0981 123456" required></label>
                 <label>Ciudad *<br><input type="text" name="billing_city" value="{{ old('billing_city', $o->billing_city) }}" required></label>
                 <label style="grid-column:1/-1">Dirección *<br><input type="text" name="billing_address" value="{{ old('billing_address', $o->billing_address) }}" required></label>
                 <label>Departamento<br><input type="text" name="billing_state" value="{{ old('billing_state', $o->billing_state) }}"></label>

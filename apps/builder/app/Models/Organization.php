@@ -10,13 +10,14 @@ class Organization extends Model
     protected $fillable = [
         'name', 'plan', 'billing_email', 'credit_balance',
         'billing_phone', 'billing_address', 'billing_city', 'billing_state',
-        'billing_postcode', 'billing_country',
+        'billing_postcode', 'billing_country', 'billing_tax_id', 'billing_company',
     ];
 
     public function billingComplete(): bool
     {
         return filled($this->billing_phone) && filled($this->billing_address)
-            && filled($this->billing_city) && filled($this->billing_country);
+            && filled($this->billing_city) && filled($this->billing_country)
+            && filled($this->billing_tax_id);
     }
 
     /** @return array<string,string> para WHMCS AddClient */
@@ -29,6 +30,8 @@ class Organization extends Model
             'state' => (string) ($this->billing_state ?: $this->billing_city),
             'postcode' => (string) ($this->billing_postcode ?: '0000'),
             'country' => (string) ($this->billing_country ?: 'PY'),
+            'companyname' => (string) $this->billing_company,
+            'tax_id' => (string) $this->billing_tax_id,
         ];
     }
 
