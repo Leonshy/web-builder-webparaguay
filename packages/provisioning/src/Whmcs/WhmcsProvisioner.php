@@ -144,7 +144,11 @@ final class WhmcsProvisioner implements SitePublisher
             'state' => $billing['state'] ?? ($billing['city'] ?? null),
             'postcode' => $billing['postcode'] ?? null,
             'country' => $billing['country'] ?? 'PY',
+            'tax_id' => $billing['tax_id'] ?? null,
             'customfields' => $customFields !== [] ? base64_encode(serialize($customFields)) : null,
+            // No forzar campos obligatorios que no aplican a una creación por API
+            // (ej. "¿Cómo nos encontró?"). Los datos reales igual se envían arriba.
+            'skipvalidation' => true,
             'noemail' => true,
         ], fn ($v) => $v !== null && $v !== ''));
 
