@@ -28,10 +28,17 @@ IP** obligatoria del lado de cada proveedor. Ver `apps/builder/.env.example`.
 Por defecto `PUBLISHING_BILLING=fake` y `PUBLISHING_HOSTING=fake`: el flujo
 completo funciona sin tocar servicios externos (dev y CI).
 
-## Gap conocido
+## La rama de release es autocontenida
 
-La rama `site-runtime-v<version>` referencia `webparaguay/schema` por *path
-repository* (`../schema`), que no existe en un deploy standalone. Antes del
-primer deploy real hay que resolverlo: vendorizar el paquete en la rama, o
-publicarlo en un Composer repo privado. La `provisioning` ya está lista; esto
-es del pipeline de release.
+`scripts/release-site-runtime.sh <version>` produce `site-runtime-v<version>`
+con **todo resuelto**: `schema-pkg/` (copia real de `packages/schema`),
+`vendor/` (`composer install --no-dev -o`) y `public/build/` (assets de vite).
+
+El servidor **no corre composer ni npm**. Deploy:
+
+```
+git pull && php artisan migrate --force && php artisan config:cache
+```
+
+En Plesk esto se configura como acción de deploy del repositorio git del
+subscription (extensión Git), disparada por WHMCS al provisionar.
