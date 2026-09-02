@@ -34,8 +34,10 @@ Dependencias, en una sola dirección: `schema → nada`,
 | — | `packages/schema` extraído | ✅ |
 | 3 | Persistencia + CMS derivado del esquema (site-runtime) | ✅ |
 | 3 | Jerarquía de cuentas + medición de IA (builder) | ✅ |
-| 4 | Entrevista guiada — **diseño** (`docs/ux-flows/`) | ✅ (sin código) |
-| — | Orquestación de agentes, generación real | pendiente |
+| 4 | Entrevista guiada — diseño (`docs/ux-flows/`) | ✅ |
+| 4 | Entrevista + pipeline de generación + handoff a site-runtime | ✅ |
+| — | Generador con IA en vivo (`ClaudeGenerator`, necesita API key) | wireado, sin ejercitar |
+| — | Auth real en el builder | pendiente |
 | — | Capa de abstracción de publicación (WHMCS + Plesk) | pendiente |
 
 Decisiones no especificadas: `docs/decisiones-tarea-1.md`,
