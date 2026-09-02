@@ -7,16 +7,25 @@ use Webparaguay\Provisioning\Money;
 
 /**
  * Planes de publicación. "Publicar = comprar": el botón de publicar es la caja.
- * Los precios son de referencia del MVP; la fuente real será WHMCS.
+ *
+ * En el MVP hay un solo plan, que corresponde 1:1 al producto de WHMCS
+ * (`WHMCS_PRODUCT_ID`). El precio real y la facturación los lleva WHMCS;
+ * `PUBLISHING_PLAN_PRICE` es sólo para mostrar y para el registro de pago.
  */
 final class Plans
 {
+    public const DEFAULT = 'web';
+
     /** @return array<string,HostingPlan> */
     public static function all(): array
     {
         return [
-            'basico' => new HostingPlan('wp-basico', 'Básico', new Money(120_000), 1),
-            'profesional' => new HostingPlan('wp-pro', 'Profesional', new Money(220_000), 1),
+            'web' => new HostingPlan(
+                code: (string) config('publishing.whmcs_product_id', 'web'),
+                label: 'Sitio web',
+                price: new Money((int) config('publishing.plan_price', 39900)),
+                billingMonths: 1,
+            ),
         ];
     }
 

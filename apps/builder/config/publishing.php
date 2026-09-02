@@ -8,6 +8,7 @@ return [
 
     // Tag del paquete site-runtime que corren TODAS las instancias.
     'runtime_version' => env('PUBLISHING_RUNTIME_VERSION', '0.1.0'),
+    'plan_price' => (int) env('PUBLISHING_PLAN_PRICE', 39900), // guaraníes/mes, debe coincidir con el producto WHMCS
 
     'subdomain_base' => env('PUBLISHING_SUBDOMAIN_BASE', 'webparaguay.com'),
 
@@ -21,7 +22,7 @@ return [
         'secret' => env('WHMCS_SECRET', ''),
     ],
     'payment_mode' => env('WHMCS_PAYMENT_MODE', 'manual'), // manual | auto
-    'whmcs_product_id' => (int) env('WHMCS_PRODUCT_ID', 0),
+    'whmcs_product_id' => (int) env('WHMCS_PRODUCT_ID', 130),
     'whmcs_billing_cycle' => env('WHMCS_BILLING_CYCLE', 'monthly'),
 
     'plesk' => [

@@ -32,7 +32,7 @@ class PublishTest extends TestCase
         $project = $this->generatedProject();
 
         $this->post(route('publish.store', $project), [
-            'plan' => 'basico', 'domain_kind' => 'subdomain',
+            'plan' => 'web', 'domain_kind' => 'subdomain',
         ])->assertRedirect();
 
         $project->refresh();
@@ -48,7 +48,7 @@ class PublishTest extends TestCase
         $project = $this->generatedProject();
 
         $this->post(route('publish.store', $project), [
-            'plan' => 'profesional', 'domain_kind' => 'compy', 'domain_value' => 'talleresyvytu.com.py',
+            'plan' => 'web', 'domain_kind' => 'compy', 'domain_value' => 'talleresyvytu.com.py',
         ])->assertRedirect();
 
         $project->refresh();
@@ -66,16 +66,16 @@ class PublishTest extends TestCase
         $this->actingAs($user);
         $project = $org->projects()->create(['user_id' => $user->id, 'name' => 'P', 'status' => 'draft']);
 
-        $this->post(route('publish.store', $project), ['plan' => 'basico', 'domain_kind' => 'subdomain'])
+        $this->post(route('publish.store', $project), ['plan' => 'web', 'domain_kind' => 'subdomain'])
             ->assertStatus(422);
     }
 
     public function test_no_se_republica_un_sitio_ya_publicado(): void
     {
         $project = $this->generatedProject();
-        $this->post(route('publish.store', $project), ['plan' => 'basico', 'domain_kind' => 'subdomain']);
+        $this->post(route('publish.store', $project), ['plan' => 'web', 'domain_kind' => 'subdomain']);
 
-        $this->post(route('publish.store', $project->fresh()), ['plan' => 'basico', 'domain_kind' => 'subdomain'])
+        $this->post(route('publish.store', $project->fresh()), ['plan' => 'web', 'domain_kind' => 'subdomain'])
             ->assertStatus(422);
 
         $this->assertSame(1, $project->payments()->count());
@@ -99,7 +99,7 @@ class PublishTest extends TestCase
         $project = $this->generatedProject();
         $project->site->update(['document' => json_decode((string) file_get_contents(\Webparaguay\Schema\Schema::examplePath()), true)]);
 
-        $this->post(route('publish.store', $project), ['plan' => 'basico', 'domain_kind' => 'subdomain'])->assertRedirect();
+        $this->post(route('publish.store', $project), ['plan' => 'web', 'domain_kind' => 'subdomain'])->assertRedirect();
 
         $project->refresh();
         $this->assertSame('awaiting_payment', $project->status);
