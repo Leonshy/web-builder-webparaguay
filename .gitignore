@@ -21,3 +21,6 @@ yarn-error.log
 /.vscode
 .DS_Store
 __pycache__/
+
+# Documentación interna: no se publica
+/_internal/
