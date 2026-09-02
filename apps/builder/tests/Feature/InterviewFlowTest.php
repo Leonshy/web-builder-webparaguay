@@ -5,12 +5,12 @@ namespace Tests\Feature;
 use App\Generation\Brief;
 use App\Generation\Generator;
 use App\Generation\PaletteProposer;
-use App\Generation\SiteGenerator;
 use App\Generation\SiteRuntimeClient;
 use App\Generation\TemplateGenerator;
 use App\Models\Organization;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Fakes\FakeSiteRuntimeClient;
 use Tests\TestCase;
 use Webparaguay\Schema\SchemaValidator;
 
@@ -30,20 +30,7 @@ class InterviewFlowTest extends TestCase
 
     private function fakeRuntime(): void
     {
-        $this->app->bind(SiteRuntimeClient::class, fn () => new class implements SiteRuntimeClient
-        {
-            public function createSite(Project $project, string $name, array $document): array
-            {
-                // Valida acá también: site-runtime nunca importaría un doc inválido.
-                if ((new SchemaValidator())->errors($document) !== []) {
-                    throw new \RuntimeException('doc inválido llegó al runtime');
-                }
-
-                return ['site_ref' => 'rt_'.$project->id, 'preview_url' => 'http://runtime.test/s/tok'];
-            }
-
-            public function markPublished(string $siteRef, string $fqdn): void {}
-        });
+        $this->app->bind(SiteRuntimeClient::class, FakeSiteRuntimeClient::class);
     }
 
     public function test_cada_etapa_persiste_y_volver_atras_no_pierde_nada(): void

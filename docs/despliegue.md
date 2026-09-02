@@ -11,11 +11,19 @@ Todos los sitios publicados corren el **mismo paquete versionado del CMS**
    `packages/site-runtime` y publica la rama `site-runtime-v<version>` en
    GitHub. Es un repo Laravel autocontenido en la raíz.
 2. Al publicar un proyecto, `apps/builder` (vía `packages/provisioning`):
-   - cobra (WHMCS) — *publicar = comprar*;
-   - crea el subscription en Plesk;
-   - configura el repositorio git del subscription apuntando a
-     `site-runtime-v<version>` y dispara `git pull` + `migrate` + `config:cache`;
-   - agrega el dominio (alias + DNS + Let's Encrypt).
+   - **`PUBLISHING_HOSTING=whmcs`**: coloca una orden del producto de hosting
+     `WHMCS_PRODUCT_ID` en WHMCS. WHMCS provisiona la suscripción en Plesk
+     (módulo de servidor). Una suscripción por sitio (aislación §5.9).
+     - `WHMCS_PAYMENT_MODE=manual`: la orden queda con factura impaga; un admin
+       confirma el pago y acepta la orden en WHMCS; `php artisan
+       builder:activate-order {projectId}` termina la publicación (siembra el
+       sitio en la instancia + lo pone en línea).
+     - `WHMCS_PAYMENT_MODE=auto`: se asume el pago cobrado aparte (Bancard);
+       el builder registra el pago en la factura y acepta la orden en el acto.
+   - **`PUBLISHING_HOSTING=fake`** (dev/CI): simula todo sin tocar servicios.
+   - El **service plan de Plesk** que usa el producto debe clonar
+     `site-runtime-v<version>` al crear la suscripción (extensión Git), con
+     acciones de deploy `php artisan migrate --force` + `config:cache`.
 3. El `.com.py` no bloquea: el sitio queda vivo en el subdominio de la
    plataforma y el dominio en trámite (NIC.py, 24–72 h), con tarea en el
    back-office. Al completarse se reapunta.

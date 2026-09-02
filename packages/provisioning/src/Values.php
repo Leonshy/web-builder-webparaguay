@@ -43,6 +43,7 @@ final class DomainRequest
 final class Charge
 {
     public const PAID = 'paid';
+    public const PENDING = 'pending';
     public const FAILED = 'failed';
 
     public function __construct(
@@ -50,11 +51,17 @@ final class Charge
         public readonly string $gatewayRef,
         public readonly Money $amount,
         public readonly ?string $failureReason = null,
+        public readonly ?string $note = null,
     ) {}
 
     public function paid(): bool
     {
         return $this->status === self::PAID;
+    }
+
+    public function pending(): bool
+    {
+        return $this->status === self::PENDING;
     }
 }
 
@@ -91,6 +98,11 @@ final class PublishResult
         public readonly HostingAccount $account,
         public readonly DomainOutcome $domain,
         public readonly string $runtimeVersion,
+        /** Referencias de WHMCS, cuando aplica: la orden y el servicio. */
+        public readonly ?string $orderRef = null,
+        public readonly ?string $serviceRef = null,
+        /** true si el sitio todavía NO está activo (pago manual / orden pendiente). */
+        public readonly bool $awaitingActivation = false,
     ) {}
 }
 

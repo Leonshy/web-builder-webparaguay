@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Site extends Model
 {
-    protected $fillable = ['project_id', 'runtime_site_ref', 'preview_url', 'name', 'published_domain', 'published_at', 'hosting_account_ref', 'runtime_version', 'live_fqdn', 'domain_status', 'pending_fqdn'];
+    protected $fillable = ['project_id', 'runtime_site_ref', 'preview_url', 'name', 'published_domain', 'published_at', 'hosting_account_ref', 'whmcs_order_ref', 'whmcs_service_ref', 'runtime_version', 'live_fqdn', 'domain_status', 'pending_fqdn', 'document'];
 
-    protected $casts = ['published_at' => 'datetime'];
+    protected $casts = ['published_at' => 'datetime', 'document' => 'array'];
 
     public function project(): BelongsTo
     {

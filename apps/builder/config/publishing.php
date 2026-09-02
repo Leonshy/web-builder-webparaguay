@@ -20,6 +20,10 @@ return [
         'identifier' => env('WHMCS_IDENTIFIER', ''),
         'secret' => env('WHMCS_SECRET', ''),
     ],
+    'payment_mode' => env('WHMCS_PAYMENT_MODE', 'manual'), // manual | auto
+    'whmcs_product_id' => (int) env('WHMCS_PRODUCT_ID', 0),
+    'whmcs_billing_cycle' => env('WHMCS_BILLING_CYCLE', 'monthly'),
+
     'plesk' => [
         'url' => env('PLESK_URL', ''),
         'api_key' => env('PLESK_API_KEY', ''),

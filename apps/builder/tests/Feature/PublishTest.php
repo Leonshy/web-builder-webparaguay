@@ -6,6 +6,7 @@ use App\Generation\SiteRuntimeClient;
 use App\Models\Organization;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Fakes\FakeSiteRuntimeClient;
 use Tests\TestCase;
 
 class PublishTest extends TestCase
@@ -21,16 +22,7 @@ class PublishTest extends TestCase
         $project = $org->projects()->create(['user_id' => $user->id, 'name' => 'Sitio', 'status' => 'generated']);
         $project->site()->create(['name' => 'Talleres Yvytu', 'runtime_site_ref' => '7', 'preview_url' => 'http://rt/s/x']);
 
-        // El markPublished no debe salir a la red en tests.
-        $this->app->bind(SiteRuntimeClient::class, fn () => new class implements SiteRuntimeClient
-        {
-            public function createSite(Project $p, string $n, array $d): array
-            {
-                return ['site_ref' => '7', 'preview_url' => 'x'];
-            }
-
-            public function markPublished(string $siteRef, string $fqdn): void {}
-        });
+        $this->app->bind(SiteRuntimeClient::class, FakeSiteRuntimeClient::class);
 
         return $project;
     }
@@ -87,5 +79,41 @@ class PublishTest extends TestCase
             ->assertStatus(422);
 
         $this->assertSame(1, $project->payments()->count());
+    }
+
+    public function test_pago_pendiente_deja_el_proyecto_esperando_activacion(): void
+    {
+        $this->app->bind(\Webparaguay\Provisioning\SitePublisher::class, fn () => new class implements \Webparaguay\Provisioning\SitePublisher
+        {
+            public function publish(\Webparaguay\Provisioning\PublishInput $input): \Webparaguay\Provisioning\PublishResult
+            {
+                return new \Webparaguay\Provisioning\PublishResult(
+                    charge: new \Webparaguay\Provisioning\Charge(\Webparaguay\Provisioning\Charge::PENDING, 'inv_1', $input->plan->price, note: 'confirmar en WHMCS'),
+                    account: new \Webparaguay\Provisioning\HostingAccount('svc_9', $input->subdomainLabel.'.webparaguay.com'),
+                    domain: new \Webparaguay\Provisioning\DomainOutcome(\Webparaguay\Provisioning\DomainOutcome::SUBDOMAIN_LIVE, $input->subdomainLabel.'.webparaguay.com'),
+                    runtimeVersion: '0.1.0', orderRef: 'ord_5', serviceRef: 'svc_9', awaitingActivation: true,
+                );
+            }
+        });
+
+        $project = $this->generatedProject();
+        $project->site->update(['document' => json_decode((string) file_get_contents(\Webparaguay\Schema\Schema::examplePath()), true)]);
+
+        $this->post(route('publish.store', $project), ['plan' => 'basico', 'domain_kind' => 'subdomain'])->assertRedirect();
+
+        $project->refresh();
+        $this->assertSame('awaiting_payment', $project->status);
+        $this->assertDatabaseHas('payments', ['project_id' => $project->id, 'status' => 'pending']);
+        $this->assertDatabaseHas('backoffice_tasks', ['project_id' => $project->id, 'kind' => 'confirm_order_payment']);
+        $this->assertNull($project->site->published_at);
+
+        // Activar con el pago ya confirmado (driver fake → no chequea WHMCS).
+        app(\App\Publishing\ActivateOrder::class)->handle($project);
+
+        $project->refresh();
+        $this->assertSame('published', $project->status);
+        $this->assertSame('done', $project->backofficeTasks()->where('kind', 'confirm_order_payment')->value('status'));
+        $this->assertDatabaseHas('payments', ['project_id' => $project->id, 'status' => 'paid']);
+        $this->assertNotNull($project->site->published_at);
     }
 }

@@ -18,8 +18,10 @@ use Webparaguay\Provisioning\Fake\FakeHostingProvisioner;
 use Webparaguay\Provisioning\HostingProvisioner;
 use Webparaguay\Provisioning\Plesk\PleskHostingProvisioner;
 use Webparaguay\Provisioning\Provisioner;
+use Webparaguay\Provisioning\SitePublisher;
 use Webparaguay\Provisioning\Whmcs\WhmcsBillingGateway;
 use Webparaguay\Provisioning\Whmcs\WhmcsDomainRegistrar;
+use Webparaguay\Provisioning\Whmcs\WhmcsProvisioner;
 use Webparaguay\Schema\SchemaValidator;
 
 class AppServiceProvider extends ServiceProvider
@@ -71,6 +73,26 @@ class AppServiceProvider extends ServiceProvider
             $app->make(DomainRegistrar::class),
             config('publishing.runtime_version'),
         ));
+
+        // El publicador: WHMCS nativo, o el compuesto (fakes en dev).
+        $this->app->singleton(SitePublisher::class, function ($app) {
+            if (config('publishing.hosting_driver') !== 'whmcs') {
+                return $app->make(Provisioner::class);
+            }
+
+            $wp = config('publishing.whmcs');
+
+            return new WhmcsProvisioner(
+                baseUrl: $wp['url'],
+                identifier: $wp['identifier'],
+                secret: $wp['secret'],
+                productId: (int) config('publishing.whmcs_product_id'),
+                subdomainBase: config('publishing.subdomain_base'),
+                runtimeVersion: config('publishing.runtime_version'),
+                paymentMode: config('publishing.payment_mode', 'manual'),
+                billingCycle: config('publishing.whmcs_billing_cycle', 'monthly'),
+            );
+        });
     }
 
     public function boot(): void

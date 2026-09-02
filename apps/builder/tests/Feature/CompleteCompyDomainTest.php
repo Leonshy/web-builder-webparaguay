@@ -7,6 +7,7 @@ use App\Models\Organization;
 use App\Models\Project;
 use App\Publishing\CompleteCompyDomain;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Fakes\FakeSiteRuntimeClient;
 use Tests\TestCase;
 
 class CompleteCompyDomainTest extends TestCase
@@ -15,15 +16,7 @@ class CompleteCompyDomainTest extends TestCase
 
     private function pendingCompyProject(): Project
     {
-        $this->app->bind(SiteRuntimeClient::class, fn () => new class implements SiteRuntimeClient
-        {
-            public function createSite(Project $p, string $n, array $d): array
-            {
-                return ['site_ref' => '5', 'preview_url' => 'x'];
-            }
-
-            public function markPublished(string $siteRef, string $fqdn): void {}
-        });
+        $this->app->bind(SiteRuntimeClient::class, FakeSiteRuntimeClient::class);
 
         $org = Organization::create(['name' => 'Org', 'plan' => 'paid']);
         $user = $org->users()->create(['name' => 'U', 'email' => 'u@e.com', 'password' => bcrypt('x')]);

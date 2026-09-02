@@ -7,13 +7,11 @@ use Illuminate\Support\Facades\Http;
 
 final class HttpSiteRuntimeClient implements SiteRuntimeClient
 {
-    public function createSite(Project $project, string $name, array $document): array
+    public function createSite(Project $project, string $name, array $document, ?string $baseUrl = null): array
     {
-        $base = rtrim((string) config('generation.site_runtime_url'), '/');
-
         $response = Http::withToken((string) config('generation.site_runtime_token'))
             ->timeout(30)
-            ->post("{$base}/internal/sites", [
+            ->post("{$this->base($baseUrl)}/internal/sites", [
                 'builder_project_ref' => (string) $project->id,
                 'name' => $name,
                 'document' => $document,
@@ -27,13 +25,16 @@ final class HttpSiteRuntimeClient implements SiteRuntimeClient
         ];
     }
 
-    public function markPublished(string $siteRef, string $fqdn): void
+    public function markPublished(string $siteRef, string $fqdn, ?string $baseUrl = null): void
     {
-        $base = rtrim((string) config('generation.site_runtime_url'), '/');
-
         Http::withToken((string) config('generation.site_runtime_token'))
             ->timeout(30)
-            ->post("{$base}/internal/sites/{$siteRef}/publish", ['fqdn' => $fqdn])
+            ->post("{$this->base($baseUrl)}/internal/sites/{$siteRef}/publish", ['fqdn' => $fqdn])
             ->throw();
+    }
+
+    private function base(?string $baseUrl): string
+    {
+        return rtrim($baseUrl ?: (string) config('generation.site_runtime_url'), '/');
     }
 }

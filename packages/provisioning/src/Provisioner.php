@@ -11,7 +11,7 @@ namespace Webparaguay\Provisioning;
  * El `.com.py` no es un error: el sitio queda vivo en el subdominio y el
  * dominio en trámite (estado del proyecto).
  */
-final class Provisioner
+final class Provisioner implements SitePublisher
 {
     public function __construct(
         private BillingGateway $billing,

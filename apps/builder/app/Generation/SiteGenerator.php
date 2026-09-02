@@ -57,6 +57,7 @@ final class SiteGenerator
             'name' => $name,
             'runtime_site_ref' => $result['site_ref'],
             'preview_url' => $result['preview_url'],
+            'document' => $document,
         ]);
         $project->update(['status' => 'generated']);
         $draft->update(['stage' => 'done']);
