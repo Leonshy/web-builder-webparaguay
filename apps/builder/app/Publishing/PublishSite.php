@@ -94,7 +94,21 @@ final class PublishSite
         });
 
         if (! $awaiting) {
-            $this->runtime->markPublished($site->runtime_site_ref, $result->domain->liveFqdn);
+            // La suscripción ya está activa: sembrar el sitio en la instancia.
+            $instanceUrl = 'https://'.$result->domain->liveFqdn;
+            try {
+                $seeded = $this->runtime->createSite($project, $site->name, $site->document, $instanceUrl);
+                $site->update(['runtime_site_ref' => $seeded['site_ref']]);
+                $this->runtime->markPublished($seeded['site_ref'], $result->domain->liveFqdn, $instanceUrl);
+            } catch (\Throwable $e) {
+                // La instancia todavía no tiene el CMS desplegado. Queda una
+                // tarea de back-office; el sitio se siembra con activate-order.
+                $project->backofficeTasks()->create([
+                    'kind' => 'seed_instance',
+                    'note' => "Desplegar site-runtime en {$result->domain->liveFqdn} y correr builder:activate-order {$project->id}. ({$e->getMessage()})",
+                ]);
+                $project->update(['status' => 'awaiting_payment']);
+            }
         }
     }
 
