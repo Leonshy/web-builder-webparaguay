@@ -138,6 +138,10 @@ final class WhmcsProvisioner implements SitePublisher
             'lastname' => $last ?: '-',
             'companyname' => $billing['companyname'] ?? null,
             'email' => $email,
+            // WHMCS exige contraseña aunque skipvalidation esté activo. El
+            // cliente opera desde el builder; si necesita WHMCS, usa "olvidé
+            // mi contraseña".
+            'password2' => bin2hex(random_bytes(16)).'Aa1!',
             'phonenumber' => $phone ?: null,
             'address1' => $billing['address'] ?? null,
             'city' => $billing['city'] ?? null,
