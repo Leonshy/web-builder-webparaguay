@@ -32,5 +32,11 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <env name="PUBLISHING_HOSTING" value="fake"/>
+        <env name="PUBLISHING_BILLING" value="fake"/>
+        <env name="BUILDER_GENERATOR" value="template"/>
+        <env name="WHMCS_URL" value=""/>
+        <env name="WHMCS_IDENTIFIER" value=""/>
+        <env name="WHMCS_SECRET" value=""/>
     </php>
 </phpunit>
