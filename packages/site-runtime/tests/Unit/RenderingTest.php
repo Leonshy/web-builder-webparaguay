@@ -6,6 +6,7 @@ use App\Rendering\HtmlSanitizer;
 use App\Rendering\IconRegistry;
 use App\Rendering\Theme\Color;
 use App\Rendering\Theme\ThemeHelper;
+use App\Rendering\VideoEmbed;
 use PHPUnit\Framework\TestCase;
 
 class RenderingTest extends TestCase
@@ -63,5 +64,23 @@ class RenderingTest extends TestCase
 
         $this->assertNotEmpty($vars['--wp-font-heading']);
         $this->assertNotEmpty($vars['--wp-font-body']);
+    }
+
+    public function test_video_embed_parsea_youtube_y_vimeo_y_rechaza_lo_demas(): void
+    {
+        $yt = VideoEmbed::parse('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+        $this->assertSame('youtube', $yt['provider']);
+        $this->assertStringContainsString('youtube-nocookie.com/embed/dQw4w9WgXcQ', $yt['embed_url']);
+
+        $short = VideoEmbed::parse('https://youtu.be/dQw4w9WgXcQ');
+        $this->assertSame('dQw4w9WgXcQ', $short['id']);
+
+        $vimeo = VideoEmbed::parse('https://vimeo.com/123456789');
+        $this->assertSame('vimeo', $vimeo['provider']);
+        $this->assertStringContainsString('player.vimeo.com/video/123456789', $vimeo['embed_url']);
+
+        $this->assertNull(VideoEmbed::parse('https://ejemplo.com/video.mp4'));
+        $this->assertNull(VideoEmbed::parse(''));
+        $this->assertNull(VideoEmbed::parse('no-es-una-url'));
     }
 }

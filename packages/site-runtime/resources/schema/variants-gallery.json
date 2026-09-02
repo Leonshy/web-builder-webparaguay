@@ -1,0 +1,2011 @@
+{
+  "schema_version": "0.1",
+  "template": "landing",
+  "theme": {
+    "colors": {
+      "primary": "#1F6F5C",
+      "accent": "#E0A24B",
+      "background": "#FBFAF7",
+      "text": "#1A1A1A"
+    },
+    "typography": {
+      "pairing": "playfair-inter"
+    },
+    "shape": {
+      "radius": "md",
+      "shadow": "soft",
+      "density": "normal"
+    }
+  },
+  "settings": {
+    "business_name": "Demo de Variantes",
+    "tagline": "Todas las secciones",
+    "email": "demo@ejemplo.com.py",
+    "phone": "+595 21 000 000",
+    "whatsapp": "+595 981 000 000",
+    "address": "Asunción, Paraguay",
+    "schedule": "Lun a Vie 8 a 17",
+    "map_embed_url": "https://www.openstreetmap.org/export/embed.html?bbox=-57.65%2C-25.33%2C-57.55%2C-25.25",
+    "socials": [
+      {
+        "platform": "instagram",
+        "url": "https://instagram.com/x"
+      }
+    ]
+  },
+  "layout": {
+    "navbar": {
+      "variant": "simple",
+      "button": {
+        "label": "Ver más",
+        "action": "url",
+        "url": "#"
+      }
+    },
+    "footer": {
+      "variant": "full",
+      "description": "Fixture de regresión visual."
+    }
+  },
+  "pages": [
+    {
+      "slug": "hero",
+      "title": "hero",
+      "is_home": true,
+      "order": 0,
+      "sections": [
+        {
+          "id": "hero_split",
+          "type": "hero",
+          "variant": "split",
+          "order": 0,
+          "anchor": "hero-split",
+          "label": "hero",
+          "title": "hero · split",
+          "content": {
+            "headline": "Titular de ejemplo del hero",
+            "subheadline": "Bajada de ejemplo",
+            "body": "Cuerpo de ejemplo.",
+            "primary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "secondary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "image": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "hero"
+            },
+            "badge_title": "Sello",
+            "badge_subtitle": "certificado",
+            "slides": [
+              {
+                "headline": "Slide 1",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide1"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "headline": "Slide 2",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide2"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "headline": "Slide 3",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide3"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "hero_fullbg",
+          "type": "hero",
+          "variant": "fullbg",
+          "order": 1,
+          "anchor": "hero-fullbg",
+          "label": "hero",
+          "title": "hero · fullbg",
+          "content": {
+            "headline": "Titular de ejemplo del hero",
+            "subheadline": "Bajada de ejemplo",
+            "body": "Cuerpo de ejemplo.",
+            "primary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "secondary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "image": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "hero"
+            },
+            "badge_title": "Sello",
+            "badge_subtitle": "certificado",
+            "slides": [
+              {
+                "headline": "Slide 1",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide1"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "headline": "Slide 2",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide2"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "headline": "Slide 3",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide3"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ]
+          },
+          "background": "image",
+          "background_image": {
+            "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+            "alt": "herobg"
+          }
+        },
+        {
+          "id": "hero_minimal",
+          "type": "hero",
+          "variant": "minimal",
+          "order": 2,
+          "anchor": "hero-minimal",
+          "label": "hero",
+          "title": "hero · minimal",
+          "content": {
+            "headline": "Titular de ejemplo del hero",
+            "subheadline": "Bajada de ejemplo",
+            "body": "Cuerpo de ejemplo.",
+            "primary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "secondary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "image": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "hero"
+            },
+            "badge_title": "Sello",
+            "badge_subtitle": "certificado",
+            "slides": [
+              {
+                "headline": "Slide 1",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide1"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "headline": "Slide 2",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide2"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "headline": "Slide 3",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide3"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "id": "hero_carousel",
+          "type": "hero",
+          "variant": "carousel",
+          "order": 3,
+          "anchor": "hero-carousel",
+          "label": "hero",
+          "title": "hero · carousel",
+          "content": {
+            "headline": "Titular de ejemplo del hero",
+            "subheadline": "Bajada de ejemplo",
+            "body": "Cuerpo de ejemplo.",
+            "primary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "secondary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "image": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "hero"
+            },
+            "badge_title": "Sello",
+            "badge_subtitle": "certificado",
+            "slides": [
+              {
+                "headline": "Slide 1",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide1"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "headline": "Slide 2",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide2"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "headline": "Slide 3",
+                "subheadline": "Bajada",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "slide3"
+                },
+                "primary_button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "slug": "page-header",
+      "title": "page_header",
+      "is_home": false,
+      "order": 1,
+      "sections": [
+        {
+          "id": "page_header_simple",
+          "type": "page_header",
+          "variant": "simple",
+          "order": 0,
+          "anchor": "page-header-simple",
+          "label": "page_header",
+          "title": "page_header · simple",
+          "content": {
+            "heading": "Encabezado de página",
+            "description": "Descripción del encabezado.",
+            "icon": "building",
+            "show_breadcrumb": true
+          }
+        },
+        {
+          "id": "page_header_image",
+          "type": "page_header",
+          "variant": "image",
+          "order": 1,
+          "anchor": "page-header-image",
+          "label": "page_header",
+          "title": "page_header · image",
+          "content": {
+            "heading": "Encabezado de página",
+            "description": "Descripción del encabezado.",
+            "icon": "building",
+            "show_breadcrumb": true
+          },
+          "background": "image",
+          "background_image": {
+            "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+            "alt": "page_headerbg"
+          }
+        },
+        {
+          "id": "page_header_icon",
+          "type": "page_header",
+          "variant": "icon",
+          "order": 2,
+          "anchor": "page-header-icon",
+          "label": "page_header",
+          "title": "page_header · icon",
+          "content": {
+            "heading": "Encabezado de página",
+            "description": "Descripción del encabezado.",
+            "icon": "building",
+            "show_breadcrumb": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "media-text",
+      "title": "media_text",
+      "is_home": false,
+      "order": 2,
+      "sections": [
+        {
+          "id": "media_text_image_left",
+          "type": "media_text",
+          "variant": "image_left",
+          "order": 0,
+          "anchor": "media-text-image-left",
+          "label": "media_text",
+          "title": "media_text · image_left",
+          "content": {
+            "body": "<p>Párrafo con <strong>negrita</strong> y <em>cursiva</em>.</p><ul><li>Punto uno</li><li>Punto dos</li></ul>",
+            "image": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "mediatext"
+            },
+            "items": [
+              {
+                "title": "Ventaja uno",
+                "description": "Detalle"
+              },
+              {
+                "title": "Ventaja dos",
+                "description": "Detalle"
+              }
+            ],
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "media_text_image_right",
+          "type": "media_text",
+          "variant": "image_right",
+          "order": 1,
+          "anchor": "media-text-image-right",
+          "label": "media_text",
+          "title": "media_text · image_right",
+          "content": {
+            "body": "<p>Párrafo con <strong>negrita</strong> y <em>cursiva</em>.</p><ul><li>Punto uno</li><li>Punto dos</li></ul>",
+            "image": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "mediatext"
+            },
+            "items": [
+              {
+                "title": "Ventaja uno",
+                "description": "Detalle"
+              },
+              {
+                "title": "Ventaja dos",
+                "description": "Detalle"
+              }
+            ],
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "media_text_no_image",
+          "type": "media_text",
+          "variant": "no_image",
+          "order": 2,
+          "anchor": "media-text-no-image",
+          "label": "media_text",
+          "title": "media_text · no_image",
+          "content": {
+            "body": "<p>Párrafo con <strong>negrita</strong> y <em>cursiva</em>.</p><ul><li>Punto uno</li><li>Punto dos</li></ul>",
+            "image": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "mediatext"
+            },
+            "items": [
+              {
+                "title": "Ventaja uno",
+                "description": "Detalle"
+              },
+              {
+                "title": "Ventaja dos",
+                "description": "Detalle"
+              }
+            ],
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "feature-list",
+      "title": "feature_list",
+      "is_home": false,
+      "order": 3,
+      "sections": [
+        {
+          "id": "feature_list_grid",
+          "type": "feature_list",
+          "variant": "grid",
+          "order": 0,
+          "anchor": "feature-list-grid",
+          "label": "feature_list",
+          "title": "feature_list · grid",
+          "content": {
+            "items": [
+              {
+                "icon": "gear",
+                "title": "Ítem 1",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 2",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 3",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 4",
+                "description": "Descripción breve del elemento para probar el layout."
+              }
+            ],
+            "columns": 3,
+            "numbered": true,
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "feature_list_timeline",
+          "type": "feature_list",
+          "variant": "timeline",
+          "order": 1,
+          "anchor": "feature-list-timeline",
+          "label": "feature_list",
+          "title": "feature_list · timeline",
+          "content": {
+            "items": [
+              {
+                "icon": "gear",
+                "title": "Ítem 1",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 2",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 3",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 4",
+                "description": "Descripción breve del elemento para probar el layout."
+              }
+            ],
+            "columns": 3,
+            "numbered": true,
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "feature_list_cards",
+          "type": "feature_list",
+          "variant": "cards",
+          "order": 2,
+          "anchor": "feature-list-cards",
+          "label": "feature_list",
+          "title": "feature_list · cards",
+          "content": {
+            "items": [
+              {
+                "icon": "gear",
+                "title": "Ítem 1",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 2",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 3",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 4",
+                "description": "Descripción breve del elemento para probar el layout."
+              }
+            ],
+            "columns": 3,
+            "numbered": true,
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "feature_list_compact",
+          "type": "feature_list",
+          "variant": "compact",
+          "order": 3,
+          "anchor": "feature-list-compact",
+          "label": "feature_list",
+          "title": "feature_list · compact",
+          "content": {
+            "items": [
+              {
+                "icon": "gear",
+                "title": "Ítem 1",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 2",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 3",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 4",
+                "description": "Descripción breve del elemento para probar el layout."
+              }
+            ],
+            "columns": 3,
+            "numbered": true,
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "feature_list_bar",
+          "type": "feature_list",
+          "variant": "bar",
+          "order": 4,
+          "anchor": "feature-list-bar",
+          "label": "feature_list",
+          "title": "feature_list · bar",
+          "content": {
+            "items": [
+              {
+                "icon": "gear",
+                "title": "Ítem 1",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 2",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 3",
+                "description": "Descripción breve del elemento para probar el layout."
+              },
+              {
+                "icon": "gear",
+                "title": "Ítem 4",
+                "description": "Descripción breve del elemento para probar el layout."
+              }
+            ],
+            "columns": 3,
+            "numbered": true,
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "cta-banner",
+      "title": "cta_banner",
+      "is_home": false,
+      "order": 4,
+      "sections": [
+        {
+          "id": "cta_banner_single",
+          "type": "cta_banner",
+          "variant": "single",
+          "order": 0,
+          "anchor": "cta-banner-single",
+          "label": "cta_banner",
+          "title": "cta_banner · single",
+          "content": {
+            "body": "Texto de la franja de conversión.",
+            "primary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "secondary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "cta_banner_dual",
+          "type": "cta_banner",
+          "variant": "dual",
+          "order": 1,
+          "anchor": "cta-banner-dual",
+          "label": "cta_banner",
+          "title": "cta_banner · dual",
+          "content": {
+            "body": "Texto de la franja de conversión.",
+            "primary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "secondary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "cta_banner_image",
+          "type": "cta_banner",
+          "variant": "image",
+          "order": 2,
+          "anchor": "cta-banner-image",
+          "label": "cta_banner",
+          "title": "cta_banner · image",
+          "content": {
+            "body": "Texto de la franja de conversión.",
+            "primary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            },
+            "secondary_button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          },
+          "background": "image",
+          "background_image": {
+            "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+            "alt": "cta_bannerbg"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "contact-form",
+      "title": "contact_form",
+      "is_home": false,
+      "order": 5,
+      "sections": [
+        {
+          "id": "contact_form_form_only",
+          "type": "contact_form",
+          "variant": "form_only",
+          "order": 0,
+          "anchor": "contact-form-form-only",
+          "label": "contact_form",
+          "title": "contact_form · form_only",
+          "content": {
+            "fields": [
+              "name",
+              "last_name",
+              "email",
+              "phone",
+              "company",
+              "subject",
+              "message",
+              "newsletter"
+            ],
+            "submit_label": "Enviar",
+            "box_title": "Escribinos",
+            "box_body": "Respondemos dentro del día hábil.",
+            "show_map": true,
+            "show_socials": true
+          }
+        },
+        {
+          "id": "contact_form_form_info",
+          "type": "contact_form",
+          "variant": "form_info",
+          "order": 1,
+          "anchor": "contact-form-form-info",
+          "label": "contact_form",
+          "title": "contact_form · form_info",
+          "content": {
+            "fields": [
+              "name",
+              "last_name",
+              "email",
+              "phone",
+              "company",
+              "subject",
+              "message",
+              "newsletter"
+            ],
+            "submit_label": "Enviar",
+            "box_title": "Escribinos",
+            "box_body": "Respondemos dentro del día hábil.",
+            "show_map": true,
+            "show_socials": true
+          }
+        },
+        {
+          "id": "contact_form_form_map",
+          "type": "contact_form",
+          "variant": "form_map",
+          "order": 2,
+          "anchor": "contact-form-form-map",
+          "label": "contact_form",
+          "title": "contact_form · form_map",
+          "content": {
+            "fields": [
+              "name",
+              "last_name",
+              "email",
+              "phone",
+              "company",
+              "subject",
+              "message",
+              "newsletter"
+            ],
+            "submit_label": "Enviar",
+            "box_title": "Escribinos",
+            "box_body": "Respondemos dentro del día hábil.",
+            "show_map": true,
+            "show_socials": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "stats",
+      "title": "stats",
+      "is_home": false,
+      "order": 6,
+      "sections": [
+        {
+          "id": "stats_row",
+          "type": "stats",
+          "variant": "row",
+          "order": 0,
+          "anchor": "stats-row",
+          "label": "stats",
+          "title": "stats · row",
+          "content": {
+            "items": [
+              {
+                "value": 10,
+                "suffix": "+",
+                "label": "Métrica 1",
+                "icon": "chart"
+              },
+              {
+                "value": 20,
+                "suffix": "+",
+                "label": "Métrica 2",
+                "icon": "chart"
+              },
+              {
+                "value": 30,
+                "suffix": "+",
+                "label": "Métrica 3",
+                "icon": "chart"
+              },
+              {
+                "value": 40,
+                "suffix": "+",
+                "label": "Métrica 4",
+                "icon": "chart"
+              }
+            ],
+            "animate": true
+          }
+        },
+        {
+          "id": "stats_cards",
+          "type": "stats",
+          "variant": "cards",
+          "order": 1,
+          "anchor": "stats-cards",
+          "label": "stats",
+          "title": "stats · cards",
+          "content": {
+            "items": [
+              {
+                "value": 10,
+                "suffix": "+",
+                "label": "Métrica 1",
+                "icon": "chart"
+              },
+              {
+                "value": 20,
+                "suffix": "+",
+                "label": "Métrica 2",
+                "icon": "chart"
+              },
+              {
+                "value": 30,
+                "suffix": "+",
+                "label": "Métrica 3",
+                "icon": "chart"
+              },
+              {
+                "value": 40,
+                "suffix": "+",
+                "label": "Métrica 4",
+                "icon": "chart"
+              }
+            ],
+            "animate": true
+          }
+        },
+        {
+          "id": "stats_inline",
+          "type": "stats",
+          "variant": "inline",
+          "order": 2,
+          "anchor": "stats-inline",
+          "label": "stats",
+          "title": "stats · inline",
+          "content": {
+            "items": [
+              {
+                "value": 10,
+                "suffix": "+",
+                "label": "Métrica 1",
+                "icon": "chart"
+              },
+              {
+                "value": 20,
+                "suffix": "+",
+                "label": "Métrica 2",
+                "icon": "chart"
+              },
+              {
+                "value": 30,
+                "suffix": "+",
+                "label": "Métrica 3",
+                "icon": "chart"
+              },
+              {
+                "value": 40,
+                "suffix": "+",
+                "label": "Métrica 4",
+                "icon": "chart"
+              }
+            ],
+            "animate": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "rich-text",
+      "title": "rich_text",
+      "is_home": false,
+      "order": 7,
+      "sections": [
+        {
+          "id": "rich_text_default",
+          "type": "rich_text",
+          "variant": "default",
+          "order": 0,
+          "anchor": "rich-text-default",
+          "label": "rich_text",
+          "title": "rich_text · default",
+          "content": {
+            "body": "<h3>Subtítulo</h3><p>Contenido extenso de ejemplo.</p><ol><li>Uno</li><li>Dos</li></ol>",
+            "width": "normal"
+          }
+        },
+        {
+          "id": "rich_text_boxed",
+          "type": "rich_text",
+          "variant": "boxed",
+          "order": 1,
+          "anchor": "rich-text-boxed",
+          "label": "rich_text",
+          "title": "rich_text · boxed",
+          "content": {
+            "body": "<h3>Subtítulo</h3><p>Contenido extenso de ejemplo.</p><ol><li>Uno</li><li>Dos</li></ol>",
+            "width": "normal"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "gallery",
+      "title": "gallery",
+      "is_home": false,
+      "order": 8,
+      "sections": [
+        {
+          "id": "gallery_grid",
+          "type": "gallery",
+          "variant": "grid",
+          "order": 0,
+          "anchor": "gallery-grid",
+          "label": "gallery",
+          "title": "gallery · grid",
+          "content": {
+            "items": [
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g1"
+                },
+                "caption": "Imagen 1"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g2"
+                },
+                "caption": "Imagen 2"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g3"
+                },
+                "caption": "Imagen 3"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g4"
+                },
+                "caption": "Imagen 4"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g5"
+                },
+                "caption": "Imagen 5"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g6"
+                },
+                "caption": "Imagen 6"
+              }
+            ],
+            "columns": 3,
+            "lightbox": true,
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "gallery_masonry",
+          "type": "gallery",
+          "variant": "masonry",
+          "order": 1,
+          "anchor": "gallery-masonry",
+          "label": "gallery",
+          "title": "gallery · masonry",
+          "content": {
+            "items": [
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g1"
+                },
+                "caption": "Imagen 1"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g2"
+                },
+                "caption": "Imagen 2"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g3"
+                },
+                "caption": "Imagen 3"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g4"
+                },
+                "caption": "Imagen 4"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g5"
+                },
+                "caption": "Imagen 5"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g6"
+                },
+                "caption": "Imagen 6"
+              }
+            ],
+            "columns": 3,
+            "lightbox": true,
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "gallery_strip",
+          "type": "gallery",
+          "variant": "strip",
+          "order": 2,
+          "anchor": "gallery-strip",
+          "label": "gallery",
+          "title": "gallery · strip",
+          "content": {
+            "items": [
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g1"
+                },
+                "caption": "Imagen 1"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g2"
+                },
+                "caption": "Imagen 2"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g3"
+                },
+                "caption": "Imagen 3"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g4"
+                },
+                "caption": "Imagen 4"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g5"
+                },
+                "caption": "Imagen 5"
+              },
+              {
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "g6"
+                },
+                "caption": "Imagen 6"
+              }
+            ],
+            "columns": 3,
+            "lightbox": true,
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "entity-grid",
+      "title": "entity_grid",
+      "is_home": false,
+      "order": 9,
+      "sections": [
+        {
+          "id": "entity_grid_card_full",
+          "type": "entity_grid",
+          "variant": "card_full",
+          "order": 0,
+          "anchor": "entity-grid-card-full",
+          "label": "entity_grid",
+          "title": "entity_grid · card_full",
+          "content": {
+            "source": "manual",
+            "columns": 3,
+            "items": [
+              {
+                "icon": "gear",
+                "title": "Entidad 1",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e1"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 2",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e2"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 3",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e3"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 4",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e4"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 5",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e5"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 6",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e6"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ],
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "entity_grid_card_compact",
+          "type": "entity_grid",
+          "variant": "card_compact",
+          "order": 1,
+          "anchor": "entity-grid-card-compact",
+          "label": "entity_grid",
+          "title": "entity_grid · card_compact",
+          "content": {
+            "source": "manual",
+            "columns": 3,
+            "items": [
+              {
+                "icon": "gear",
+                "title": "Entidad 1",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e1"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 2",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e2"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 3",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e3"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 4",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e4"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 5",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e5"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 6",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e6"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ],
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        },
+        {
+          "id": "entity_grid_list",
+          "type": "entity_grid",
+          "variant": "list",
+          "order": 2,
+          "anchor": "entity-grid-list",
+          "label": "entity_grid",
+          "title": "entity_grid · list",
+          "content": {
+            "source": "manual",
+            "columns": 3,
+            "items": [
+              {
+                "icon": "gear",
+                "title": "Entidad 1",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e1"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 2",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e2"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 3",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e3"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 4",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e4"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 5",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e5"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "icon": "gear",
+                "title": "Entidad 6",
+                "description": "Descripción breve del elemento para probar el layout.",
+                "image": {
+                  "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+                  "alt": "e6"
+                },
+                "badge": "Categoría",
+                "link": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ],
+            "button": {
+              "label": "Ver más",
+              "action": "url",
+              "url": "#"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "slug": "testimonials",
+      "title": "testimonials",
+      "is_home": false,
+      "order": 10,
+      "sections": [
+        {
+          "id": "testimonials_slider_dark",
+          "type": "testimonials",
+          "variant": "slider_dark",
+          "order": 0,
+          "anchor": "testimonials-slider-dark",
+          "label": "testimonials",
+          "title": "testimonials · slider_dark",
+          "content": {
+            "items": [
+              {
+                "quote": "Testimonio de ejemplo número 1. Muy conformes.",
+                "author": "Cliente 1",
+                "role": "Empresa",
+                "rating": 5
+              },
+              {
+                "quote": "Testimonio de ejemplo número 2. Muy conformes.",
+                "author": "Cliente 2",
+                "role": "Empresa",
+                "rating": 5
+              },
+              {
+                "quote": "Testimonio de ejemplo número 3. Muy conformes.",
+                "author": "Cliente 3",
+                "role": "Empresa",
+                "rating": 5
+              }
+            ],
+            "autoplay": true
+          }
+        },
+        {
+          "id": "testimonials_grid",
+          "type": "testimonials",
+          "variant": "grid",
+          "order": 1,
+          "anchor": "testimonials-grid",
+          "label": "testimonials",
+          "title": "testimonials · grid",
+          "content": {
+            "items": [
+              {
+                "quote": "Testimonio de ejemplo número 1. Muy conformes.",
+                "author": "Cliente 1",
+                "role": "Empresa",
+                "rating": 5
+              },
+              {
+                "quote": "Testimonio de ejemplo número 2. Muy conformes.",
+                "author": "Cliente 2",
+                "role": "Empresa",
+                "rating": 5
+              },
+              {
+                "quote": "Testimonio de ejemplo número 3. Muy conformes.",
+                "author": "Cliente 3",
+                "role": "Empresa",
+                "rating": 5
+              }
+            ],
+            "autoplay": true
+          }
+        },
+        {
+          "id": "testimonials_single",
+          "type": "testimonials",
+          "variant": "single",
+          "order": 2,
+          "anchor": "testimonials-single",
+          "label": "testimonials",
+          "title": "testimonials · single",
+          "content": {
+            "items": [
+              {
+                "quote": "Testimonio de ejemplo número 1. Muy conformes.",
+                "author": "Cliente 1",
+                "role": "Empresa",
+                "rating": 5
+              },
+              {
+                "quote": "Testimonio de ejemplo número 2. Muy conformes.",
+                "author": "Cliente 2",
+                "role": "Empresa",
+                "rating": 5
+              },
+              {
+                "quote": "Testimonio de ejemplo número 3. Muy conformes.",
+                "author": "Cliente 3",
+                "role": "Empresa",
+                "rating": 5
+              }
+            ],
+            "autoplay": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "faq",
+      "title": "faq",
+      "is_home": false,
+      "order": 11,
+      "sections": [
+        {
+          "id": "faq_accordion_single",
+          "type": "faq",
+          "variant": "accordion_single",
+          "order": 0,
+          "anchor": "faq-accordion-single",
+          "label": "faq",
+          "title": "faq · accordion_single",
+          "content": {
+            "items": [
+              {
+                "question": "¿Pregunta de ejemplo 1?",
+                "answer": "<p>Respuesta 1.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 2?",
+                "answer": "<p>Respuesta 2.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 3?",
+                "answer": "<p>Respuesta 3.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 4?",
+                "answer": "<p>Respuesta 4.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 5?",
+                "answer": "<p>Respuesta 5.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 6?",
+                "answer": "<p>Respuesta 6.</p>"
+              }
+            ],
+            "layout_columns": 2
+          }
+        },
+        {
+          "id": "faq_accordion_two_col",
+          "type": "faq",
+          "variant": "accordion_two_col",
+          "order": 1,
+          "anchor": "faq-accordion-two-col",
+          "label": "faq",
+          "title": "faq · accordion_two_col",
+          "content": {
+            "items": [
+              {
+                "question": "¿Pregunta de ejemplo 1?",
+                "answer": "<p>Respuesta 1.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 2?",
+                "answer": "<p>Respuesta 2.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 3?",
+                "answer": "<p>Respuesta 3.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 4?",
+                "answer": "<p>Respuesta 4.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 5?",
+                "answer": "<p>Respuesta 5.</p>"
+              },
+              {
+                "question": "¿Pregunta de ejemplo 6?",
+                "answer": "<p>Respuesta 6.</p>"
+              }
+            ],
+            "layout_columns": 2
+          }
+        }
+      ]
+    },
+    {
+      "slug": "pricing-plans",
+      "title": "pricing_plans",
+      "is_home": false,
+      "order": 12,
+      "sections": [
+        {
+          "id": "pricing_plans_cards",
+          "type": "pricing_plans",
+          "variant": "cards",
+          "order": 0,
+          "anchor": "pricing-plans-cards",
+          "label": "pricing_plans",
+          "title": "pricing_plans · cards",
+          "content": {
+            "items": [
+              {
+                "name": "Plan 1",
+                "tagline": "Ideal para probar",
+                "price": "₲ 100.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": false,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "name": "Plan 2",
+                "tagline": "Ideal para probar",
+                "price": "₲ 200.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": true,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "name": "Plan 3",
+                "tagline": "Ideal para probar",
+                "price": "₲ 300.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": false,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ],
+            "footer_note": "Nota al pie."
+          }
+        },
+        {
+          "id": "pricing_plans_table",
+          "type": "pricing_plans",
+          "variant": "table",
+          "order": 1,
+          "anchor": "pricing-plans-table",
+          "label": "pricing_plans",
+          "title": "pricing_plans · table",
+          "content": {
+            "items": [
+              {
+                "name": "Plan 1",
+                "tagline": "Ideal para probar",
+                "price": "₲ 100.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": false,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "name": "Plan 2",
+                "tagline": "Ideal para probar",
+                "price": "₲ 200.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": true,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "name": "Plan 3",
+                "tagline": "Ideal para probar",
+                "price": "₲ 300.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": false,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ],
+            "footer_note": "Nota al pie."
+          }
+        },
+        {
+          "id": "pricing_plans_simple",
+          "type": "pricing_plans",
+          "variant": "simple",
+          "order": 2,
+          "anchor": "pricing-plans-simple",
+          "label": "pricing_plans",
+          "title": "pricing_plans · simple",
+          "content": {
+            "items": [
+              {
+                "name": "Plan 1",
+                "tagline": "Ideal para probar",
+                "price": "₲ 100.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": false,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "name": "Plan 2",
+                "tagline": "Ideal para probar",
+                "price": "₲ 200.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": true,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              },
+              {
+                "name": "Plan 3",
+                "tagline": "Ideal para probar",
+                "price": "₲ 300.000",
+                "period": "mes",
+                "description": "Descripción del plan.",
+                "features": [
+                  "Beneficio A",
+                  "Beneficio B",
+                  "Beneficio C"
+                ],
+                "is_featured": false,
+                "button": {
+                  "label": "Ver más",
+                  "action": "url",
+                  "url": "#"
+                }
+              }
+            ],
+            "footer_note": "Nota al pie."
+          }
+        }
+      ]
+    },
+    {
+      "slug": "video",
+      "title": "video",
+      "is_home": false,
+      "order": 13,
+      "sections": [
+        {
+          "id": "video_embed",
+          "type": "video",
+          "variant": "embed",
+          "order": 0,
+          "anchor": "video-embed",
+          "label": "video",
+          "title": "video · embed",
+          "content": {
+            "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "thumbnail": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "video"
+            },
+            "caption": "Video de ejemplo"
+          }
+        },
+        {
+          "id": "video_thumbnail_modal",
+          "type": "video",
+          "variant": "thumbnail_modal",
+          "order": 1,
+          "anchor": "video-thumbnail-modal",
+          "label": "video",
+          "title": "video · thumbnail_modal",
+          "content": {
+            "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "thumbnail": {
+              "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect width='800' height='600' fill='%23dcdcd6'/%3E%3C/svg%3E",
+              "alt": "video"
+            },
+            "caption": "Video de ejemplo"
+          }
+        }
+      ]
+    }
+  ]
+}

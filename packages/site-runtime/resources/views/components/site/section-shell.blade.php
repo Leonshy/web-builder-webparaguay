@@ -1,6 +1,6 @@
-@props(['ctx', 'section', 'center' => false, 'heading' => true, 'container' => true, 'inner' => 'wp-container'])
+@props(['ctx', 'section', 'center' => false, 'heading' => true, 'container' => true, 'inner' => 'wp-container', 'forceDark' => false])
 @php
-    $bg = $section->background();
+    $bg = $forceDark ? 'dark' : $section->background();
     $bgImage = $bg === 'image' ? $section->backgroundImage() : null;
     $hasHeading = $heading && ($section->label() || $section->title() || $section->subtitle());
 @endphp

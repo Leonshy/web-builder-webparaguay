@@ -23,21 +23,31 @@ Blade. Sin base de datos: el JSON se lee de un archivo.
 
 ### Tipos implementados
 
-`hero` · `page_header` · `media_text` · `feature_list` · `cta_banner` · `stats`
-(todas sus variantes). Los otros 8 tipos muestran un aviso en modo debug y se
-implementan en la Tarea 2.
+Los **14 tipos** con todas sus variantes (41):
+`hero` · `page_header` · `media_text` · `feature_list` · `cta_banner` ·
+`contact_form` · `stats` · `rich_text` · `gallery` · `entity_grid` ·
+`testimonials` · `faq` · `pricing_plans` · `video`.
+
+- `contact_form`: los datos salen de `site.settings`. El envío es un **stub**
+  (`ContactStubController`); captcha, validación y rate limiting son del sistema.
+- `entity_grid`: sólo `source: "manual"` en el MVP. Los demás valores muestran
+  un aviso en debug y son el punto de extensión de la v1.
+- `video`: YouTube y Vimeo. Si la URL no parsea, la sección no se renderiza.
 
 ## Desarrollo
 
 ```bash
 composer install && npm install && npm run build
-php artisan serve      # http://localhost:8000/preview
-php artisan test
+php artisan serve          # http://localhost:8000/preview
+php artisan test           # unit + feature
+npm run regression         # regresión visual de las 41 variantes (Playwright)
+npm run regression:update  # regenera las referencias
 ```
 
-`/preview` renderiza `resources/schema/example-site.json` (espejo de
-`schema/example-site.json` en la raíz del repo).
+- `/preview` → `resources/schema/example-site.json` (plantilla institucional).
+- `/variants/{tipo}` → `resources/schema/variants-gallery.json`, una página por
+  tipo con todas sus variantes. Fixture de la regresión visual.
 
 ## Decisiones no especificadas
 
-Ver `../../docs/decisiones-tarea-1.md`.
+`../../docs/decisiones-tarea-1.md` y `../../docs/decisiones-tarea-2.md`.

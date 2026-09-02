@@ -6,39 +6,40 @@ use App\Rendering\RenderContext;
 use App\Rendering\SchemaValidator;
 use App\Rendering\SiteConfig;
 use App\Rendering\UrlContext;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Ruta de desarrollo: renderiza el sitio de ejemplo desde un archivo JSON.
+ * Rutas de desarrollo: renderizan un sitio desde un archivo JSON.
  * Sin base de datos. El JSON se valida contra el esquema antes de pintar.
+ *
+ *   /preview   -> resources/schema/example-site.json  (plantilla institucional)
+ *   /variants  -> resources/schema/variants-gallery.json  (regresión visual)
  */
 class PreviewController extends Controller
 {
-    private const BASE_PATH = '/preview';
+    public function __construct(private SchemaValidator $validator) {}
 
-    public function __invoke(Request $request, SchemaValidator $validator, ?string $slug = null)
+    public function render(string $fixture, string $basePath, ?string $slug = null)
     {
-        $path = (string) config('site-runtime.preview_site_path');
+        $path = $fixture === 'variants'
+            ? base_path('resources/schema/variants-gallery.json')
+            : (string) config('site-runtime.preview_site_path');
 
-        abort_unless(is_file($path), 404, 'No hay sitio de ejemplo configurado.');
+        abort_unless(is_file($path), 404, 'No hay sitio configurado.');
 
         $raw = json_decode((string) file_get_contents($path), true);
 
-        $errors = $validator->errors($raw);
-        abort_if($errors !== [], 422, "El sitio de ejemplo no valida:\n - ".implode("\n - ", $errors));
+        $errors = $this->validator->errors($raw);
+        abort_if($errors !== [], 422, "El sitio no valida:\n - ".implode("\n - ", $errors));
 
         $site = SiteConfig::fromArray($raw);
-
-        $page = $slug === null
-            ? $site->homePage()
-            : $site->pageBySlug($slug);
+        $page = $slug === null ? $site->homePage() : $site->pageBySlug($slug);
 
         if ($page === null) {
             throw new NotFoundHttpException("No existe la página «{$slug}».");
         }
 
-        $url = new UrlContext(self::BASE_PATH, $page->slug(), $page->isHome());
+        $url = new UrlContext($basePath, $page->slug(), $page->isHome());
         $ctx = new RenderContext($site, $page, $url);
 
         return response()
