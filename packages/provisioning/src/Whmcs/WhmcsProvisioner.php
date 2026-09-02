@@ -5,7 +5,6 @@ namespace Webparaguay\Provisioning\Whmcs;
 use GuzzleHttp\Client;
 use Webparaguay\Provisioning\Charge;
 use Webparaguay\Provisioning\DomainOutcome;
-use Webparaguay\Provisioning\DomainRequest;
 use Webparaguay\Provisioning\HostingAccount;
 use Webparaguay\Provisioning\ProvisioningException;
 use Webparaguay\Provisioning\PublishInput;
@@ -36,6 +35,7 @@ final class WhmcsProvisioner implements SitePublisher
         private string $runtimeVersion,
         private string $paymentMode = 'manual',       // manual | auto
         private string $billingCycle = 'monthly',
+        private string $paymentMethod = 'mailin',      // gateway de WHMCS (mailin = transferencia)
         private int $pollAttempts = 20,
         private int $pollSleepSeconds = 6,
         private ?Client $http = null,
@@ -72,7 +72,7 @@ final class WhmcsProvisioner implements SitePublisher
             $this->call('AddInvoicePayment', [
                 'invoiceid' => $invoiceId,
                 'transid' => 'builder-'.$input->siteRef.'-'.time(),
-                'gateway' => 'bancard',
+                'gateway' => $this->paymentMethod,
             ]);
             $this->waitUntilActive($clientId, $serviceId);
 
@@ -149,7 +149,7 @@ final class WhmcsProvisioner implements SitePublisher
             'pid' => [$this->productId],
             'domain' => [$fqdn],
             'billingcycle' => [$this->billingCycle],
-            'paymentmethod' => 'bancard',
+            'paymentmethod' => $this->paymentMethod,
             'noinvoiceemail' => true,
         ]);
 

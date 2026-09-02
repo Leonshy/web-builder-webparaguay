@@ -24,6 +24,7 @@ return [
     'payment_mode' => env('WHMCS_PAYMENT_MODE', 'manual'), // manual | auto
     'whmcs_product_id' => (int) env('WHMCS_PRODUCT_ID', 130),
     'whmcs_billing_cycle' => env('WHMCS_BILLING_CYCLE', 'monthly'),
+    'whmcs_payment_method' => env('WHMCS_PAYMENT_METHOD', 'mailin'),
 
     'plesk' => [
         'url' => env('PLESK_URL', ''),

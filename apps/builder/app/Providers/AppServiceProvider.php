@@ -91,6 +91,7 @@ class AppServiceProvider extends ServiceProvider
                 runtimeVersion: config('publishing.runtime_version'),
                 paymentMode: config('publishing.payment_mode', 'manual'),
                 billingCycle: config('publishing.whmcs_billing_cycle', 'monthly'),
+                paymentMethod: config('publishing.whmcs_payment_method', 'mailin'),
             );
         });
     }
