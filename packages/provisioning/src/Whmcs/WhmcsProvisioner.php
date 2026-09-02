@@ -35,7 +35,7 @@ final class WhmcsProvisioner implements SitePublisher
         private string $runtimeVersion,
         private string $paymentMode = 'manual',       // manual | auto
         private string $billingCycle = 'monthly',
-        private string $paymentMethod = 'mailin',      // gateway de WHMCS (mailin = transferencia)
+        private string $paymentMethod = 'banktransfer',      // gateway de WHMCS (mailin = transferencia)
         private int $taxIdFieldId = 0,                 // id del campo personalizado "RUC o CI"
         private int $companyFieldId = 0,               // id del campo personalizado "Razón social"
         private int $pollAttempts = 20,
