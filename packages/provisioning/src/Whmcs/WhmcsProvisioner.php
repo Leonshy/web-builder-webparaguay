@@ -64,14 +64,16 @@ final class WhmcsProvisioner implements SitePublisher
         $subdomain = new DomainOutcome(DomainOutcome::SUBDOMAIN_LIVE, $fqdn);
 
         if ($this->paymentMode === 'auto') {
-            if ($invoiceId !== '') {
-                $this->call('AddInvoicePayment', [
-                    'invoiceid' => $invoiceId,
-                    'transid' => 'builder-'.$input->siteRef,
-                    'gateway' => 'bancard',
-                ]);
+            // El producto está en modo "On Payment": registrar el pago dispara
+            // el aprovisionamiento en Plesk. No hace falta AcceptOrder.
+            if ($invoiceId === '') {
+                throw new ProvisioningException('WHMCS no devolvió una factura para la orden.');
             }
-            $this->call('AcceptOrder', ['orderid' => $orderId]);
+            $this->call('AddInvoicePayment', [
+                'invoiceid' => $invoiceId,
+                'transid' => 'builder-'.$input->siteRef.'-'.time(),
+                'gateway' => 'bancard',
+            ]);
             $this->waitUntilActive($clientId, $serviceId);
 
             return new PublishResult(

@@ -27,6 +27,6 @@ return [
     'plesk' => [
         'url' => env('PLESK_URL', ''),
         'api_key' => env('PLESK_API_KEY', ''),
-        'service_plan' => env('PLESK_SERVICE_PLAN', 'webparaguay-cms'),
+        'service_plan' => env('PLESK_SERVICE_PLAN', 'IA-host'),
     ],
 ];
