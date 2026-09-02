@@ -1,61 +1,65 @@
-# Plataforma de generación web — webparaguay
+# web-builder-webparaguay
 
-Plataforma donde una PYME conversa con una IA, ve su sitio web generado y lo
-publica en un clic, quedando alojado en infraestructura de webparaguay con un
-CMS autoadministrable.
+Plataforma donde una PYME conversa con una IA, ve su sitio web completo
+generado y lo publica en un clic, alojado en infraestructura de webparaguay
+con un CMS autoadministrable.
 
-> **Principio rector:** la IA configura, el código lo escriben las personas.
-> Un sitio es un JSON validado; el renderer lo pinta con componentes Blade ya
-> escritos, testeados y auditados.
+> **El principio que ordena todo:** la IA configura, el código lo escriben las
+> personas. La salida de un agente es siempre un JSON validado contra
+> `packages/schema/site.schema.json`.
 
-## Estructura
+Leé [`CLAUDE.md`](CLAUDE.md) antes de tocar código.
+
+## Estructura (ADR-001)
 
 ```
-CLAUDE.md            Contexto y reglas no negociables. Leer primero.
-PROMPT-INICIAL.md    Prompts de arranque, uno por sesión.
-docs/                Legajo técnico y catálogo de secciones.
-schema/              Contrato formal, ejemplo y validador.
+packages/schema/       contrato JSON + validador + introspector (webparaguay/schema)
+packages/site-runtime/  renderer + CMS → corre en Plesk del cliente
+apps/builder/           cuentas, proyectos, medición de consumo de IA
+docs/                   legajo, anexos, decisiones, flujos UX
+schema/                 espejo publicado del contrato
 ```
 
-## Documentos
-
-| Archivo | Qué contiene |
-|---|---|
-| `docs/legajo-tecnico.md` | Visión, alcance por etapas, arquitectura, negocio, riesgos, KPIs |
-| `docs/anexo-a-catalogo-secciones.md` | 14 tipos de sección, contratos de contenido, 41 variantes |
-| `schema/site.schema.json` | Contrato formal (JSON Schema 2020-12) |
-| `schema/example-site.json` | Sitio de ejemplo que ejercita los 14 tipos |
-| `schema/validar.py` | Validador de línea de comandos |
-| `docs/adr-001-monorepo-con-fronteras.md` | Estructura del repositorio y reglas de dependencia |
-
-## Validar el esquema
-
-```bash
-pip install jsonschema
-python3 schema/validar.py schema/example-site.json
-```
-
-Sale con código 0 si valida. Usalo en CI.
-
-## Herramientas del entorno
-
-`impeccable` (variantes) · `emil-design-eng` (motion) · `context7` (docs) ·
-`playwright-cli` (regresión visual) · `ux-flow-designer` (entrevista guiada) ·
-`strix` (pentest por componente)
-
-Guardarraíles en `CLAUDE.md`. El más importante: **ningún color ni tipografía
-literal en un componente.** La marca es dato en runtime, no diseño.
-
-Toda herramienta nueva pasa por `skill-security-auditor` antes de instalarse.
+Dependencias, en una sola dirección: `schema → nada`,
+`site-runtime → schema`, `builder → schema`.
+**`site-runtime` nunca importa de `builder`** (frontera de seguridad).
 
 ## Estado
 
-MVP en definición. Plantillas landing e institucional.
-Catálogo en v1, ecommerce y módulos en v2, portal de agencias en v3.
+| Tarea | Qué | Estado |
+|---|---|---|
+| 1 | Andamiaje + renderer (6 tipos) | ✅ |
+| 1-fix | Menú móvil accesible | ✅ |
+| 2 | Los 14 tipos, 41 variantes + regresión visual | ✅ |
+| — | `packages/schema` extraído | ✅ |
+| 3 | Persistencia + CMS derivado del esquema (site-runtime) | ✅ |
+| 3 | Jerarquía de cuentas + medición de IA (builder) | ✅ |
+| 4 | Entrevista guiada — **diseño** (`docs/ux-flows/`) | ✅ (sin código) |
+| — | Orquestación de agentes, generación real | pendiente |
+| — | Capa de abstracción de publicación (WHMCS + Plesk) | pendiente |
 
-## Pendientes bloqueantes
+Decisiones no especificadas: `docs/decisiones-tarea-1.md`,
+`docs/decisiones-tarea-2.md`, `docs/decisiones-tarea-3-4.md`.
 
-1. Verificar la API REST de Plesk para despliegue, DNS y SSL
-2. Integrar pasarela de pago a WHMCS (prerequisito del MVP)
-3. Definir la lista curada de combinaciones tipográficas
-4. Dibujar y aprobar las 41 variantes
+## Desarrollo
+
+```bash
+# renderer + CMS
+cd packages/site-runtime
+composer install && npm install && npm run build
+php artisan migrate --seed
+php artisan serve            # /cms  ·  /preview  ·  /variants/{tipo}
+php artisan test             # 38
+npm run regression           # 43 (regresión visual de las 41 variantes)
+
+# builder
+cd apps/builder
+composer install
+php artisan migrate
+php artisan serve             # /projects
+php artisan test             # 7
+
+# contrato
+cd packages/schema && composer install && ./vendor/bin/phpunit   # 4
+python3 schema/validar.py schema/example-site.json
+```
