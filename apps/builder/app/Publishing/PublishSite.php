@@ -34,7 +34,6 @@ final class PublishSite
         $site = $project->site;
         abort_unless($site && $site->runtime_site_ref, 422, 'El sitio todavía no se generó.');
         abort_if(in_array($project->status, ['published', 'awaiting_payment'], true), 422, 'La publicación ya está en curso.');
-        abort_unless($project->organization->billingComplete(), 422, 'Faltan los datos de facturación.');
 
         $plan = Plans::get($planCode);
         $label = $this->subdomainLabel($project);

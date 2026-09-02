@@ -50,6 +50,10 @@ class PublishController extends Controller
             return back()->withErrors(['domain_value' => 'Indicá el dominio.']);
         }
 
+        if (! $project->organization->billingComplete()) {
+            return back()->withErrors(['billing' => 'Primero completá y guardá los datos de facturación.']);
+        }
+
         try {
             $publish->handle($project, $data['plan'], $data['domain_kind'], $data['domain_value'] ?? null);
         } catch (ProvisioningException $e) {
