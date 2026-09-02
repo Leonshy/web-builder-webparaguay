@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Rendering\SchemaValidator;
+use Webparaguay\Schema\SchemaValidator;
 use Tests\TestCase;
 
 /**

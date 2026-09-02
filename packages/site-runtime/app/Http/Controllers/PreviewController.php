@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Rendering\RenderContext;
-use App\Rendering\SchemaValidator;
 use App\Rendering\SiteConfig;
 use App\Rendering\UrlContext;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Webparaguay\Schema\SchemaValidator;
 
 /**
  * Rutas de desarrollo: renderizan un sitio desde un archivo JSON.
@@ -22,7 +22,7 @@ class PreviewController extends Controller
     public function render(string $fixture, string $basePath, ?string $slug = null)
     {
         $path = $fixture === 'variants'
-            ? base_path('resources/schema/variants-gallery.json')
+            ? (string) config('site-runtime.variants_site_path')
             : (string) config('site-runtime.preview_site_path');
 
         abort_unless(is_file($path), 404, 'No hay sitio configurado.');

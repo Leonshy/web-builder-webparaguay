@@ -14,7 +14,7 @@ type Fixture = {
 };
 
 const fixture: Fixture = JSON.parse(
-    readFileSync(resolve(here, '../resources/schema/variants-gallery.json'), 'utf-8'),
+    readFileSync(resolve(here, '../resources/fixtures/variants-gallery.json'), 'utf-8'),
 );
 
 const cases = fixture.pages.flatMap((page) =>

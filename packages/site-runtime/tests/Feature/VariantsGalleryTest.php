@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Rendering\SchemaValidator;
+use Webparaguay\Schema\SchemaValidator;
 use Tests\TestCase;
 
 /**
@@ -16,7 +16,7 @@ class VariantsGalleryTest extends TestCase
 {
     public function test_el_fixture_de_variantes_valida_contra_el_esquema(): void
     {
-        $raw = json_decode((string) file_get_contents(base_path('resources/schema/variants-gallery.json')), true);
+        $raw = json_decode((string) file_get_contents(config('site-runtime.variants_site_path')), true);
 
         $this->assertSame([], (new SchemaValidator())->errors($raw));
     }
