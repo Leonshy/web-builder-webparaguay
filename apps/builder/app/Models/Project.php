@@ -26,6 +26,16 @@ class Project extends Model
         return $this->hasOne(Site::class);
     }
 
+    public function interviewDraft(): HasOne
+    {
+        return $this->hasOne(InterviewDraft::class);
+    }
+
+    public function draft(): InterviewDraft
+    {
+        return $this->interviewDraft ?? $this->interviewDraft()->create([]);
+    }
+
     public function aiUsages(): HasMany
     {
         return $this->hasMany(AiUsage::class);

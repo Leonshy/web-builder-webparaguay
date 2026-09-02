@@ -11,7 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // API interna: autenticada por token, sin sesión ni CSRF.
+        $middleware->validateCsrfTokens(except: ['internal/*']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

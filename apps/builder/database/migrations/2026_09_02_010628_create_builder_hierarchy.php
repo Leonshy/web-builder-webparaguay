@@ -48,6 +48,7 @@ return new class extends Migration
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             // Id del sitio en site-runtime (base distinta, servidor del cliente).
             $table->string('runtime_site_ref')->nullable();
+            $table->string('preview_url')->nullable();
             $table->string('name');
             $table->string('published_domain')->nullable();
             $table->timestamp('published_at')->nullable();

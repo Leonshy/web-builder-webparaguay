@@ -14,4 +14,10 @@ return [
      */
     'preview_site_path' => env('SITE_RUNTIME_PREVIEW_PATH', Schema::examplePath()),
     'variants_site_path' => env('SITE_RUNTIME_VARIANTS_PATH', base_path('resources/fixtures/variants-gallery.json')),
+
+    /*
+     * Token compartido con apps/builder para la API interna de creación de
+     * sitios. Sin token configurado, el endpoint responde 401.
+     */
+    'internal_token' => env('SITE_RUNTIME_INTERNAL_TOKEN', ''),
 ];

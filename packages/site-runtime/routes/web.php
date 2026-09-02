@@ -5,6 +5,7 @@ use App\Http\Controllers\Cms\CmsPageController;
 use App\Http\Controllers\Cms\CmsPreviewController;
 use App\Http\Controllers\Cms\CmsSectionController;
 use App\Http\Controllers\ContactStubController;
+use App\Http\Controllers\Internal\CreateSiteController;
 use App\Http\Controllers\PreviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,9 @@ Route::get('/variants/{slug?}', fn ($slug = null) => app(PreviewController::clas
 // Preview con token: no indexable, compartible. Renderiza desde la base.
 Route::get('/s/{token}/{slug?}', CmsPreviewController::class)
     ->where('slug', '[a-z0-9-]+')->name('cms.preview');
+
+// API interna: apps/builder entrega el documento generado y validado.
+Route::post('/internal/sites', CreateSiteController::class)->name('internal.sites.create');
 
 // CMS. Formularios derivados del esquema; toda escritura valida antes de guardar.
 Route::prefix('cms')->group(function () {
