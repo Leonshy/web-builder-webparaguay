@@ -317,6 +317,101 @@
         color: var(--wp-text);
     }
 
+    .wp-navbar__bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding-block: 0.9rem;
+        position: relative;
+    }
+
+    .wp-navbar__brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-family: var(--wp-font-heading);
+        font-weight: var(--wp-weight-heading);
+        font-size: var(--wp-text-lg);
+    }
+
+    .wp-navbar__brand img { height: 2rem; width: auto; }
+
+    .wp-navbar__burger {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 0.5rem;
+        cursor: pointer;
+        list-style: none;
+        border-radius: var(--wp-radius-sm);
+    }
+
+    .wp-navbar__burger::-webkit-details-marker { display: none; }
+
+    .wp-navbar__burger-bar {
+        width: 22px;
+        height: 2px;
+        background-color: var(--wp-text);
+        transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .wp-navbar__disclosure[open] .wp-navbar__burger-bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .wp-navbar__disclosure[open] .wp-navbar__burger-bar:nth-child(2) { opacity: 0; }
+    .wp-navbar__disclosure[open] .wp-navbar__burger-bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    .wp-navbar__panel {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1.25rem 1.5rem;
+        background-color: var(--wp-bg);
+        border-bottom: 1px solid var(--wp-border);
+        box-shadow: var(--wp-shadow);
+    }
+
+    .wp-navbar__disclosure[open] .wp-navbar__panel { display: flex; }
+
+    .wp-navbar__links,
+    .wp-navbar__anchors {
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+    }
+
+    .wp-navbar__anchors {
+        padding-top: 0.85rem;
+        border-top: 1px solid var(--wp-border);
+        width: 100%;
+    }
+
+    @media (min-width: 860px) {
+        .wp-navbar__disclosure { display: contents; }
+        .wp-navbar__burger { display: none; }
+        .wp-navbar__panel {
+            display: flex !important;
+            position: static;
+            flex-direction: row;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0;
+            background: none;
+            border: 0;
+            box-shadow: none;
+        }
+        .wp-navbar__links { flex-direction: row; gap: 1.5rem; }
+        .wp-navbar__anchors { display: none; }
+    }
+
+    @media (max-width: 859px) {
+        .wp-navbar__substrip { display: none; }
+    }
+
     /* Footer */
     .wp-footer {
         background-color: var(--wp-dark-bg);

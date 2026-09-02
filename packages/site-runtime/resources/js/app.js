@@ -37,6 +37,24 @@ document.querySelectorAll('[data-wp-count] .wp-stat__value').forEach((el) => {
     io.observe(el);
 });
 
+// Menú móvil: cerrar al elegir un enlace, al hacer clic afuera o con Escape.
+// Sin JS el <details> abre y cierra igual.
+document.querySelectorAll('.wp-navbar__disclosure').forEach((disclosure) => {
+    const close = () => disclosure.removeAttribute('open');
+
+    disclosure.querySelectorAll('.wp-navbar__panel a').forEach((link) => {
+        link.addEventListener('click', close);
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') close();
+    });
+
+    document.addEventListener('click', (e) => {
+        if (disclosure.hasAttribute('open') && !disclosure.contains(e.target)) close();
+    });
+});
+
 // Carrusel del hero
 document.querySelectorAll('[data-wp-carousel]').forEach((root) => {
     const slides = [...root.querySelectorAll('.wp-hero__slide')];
