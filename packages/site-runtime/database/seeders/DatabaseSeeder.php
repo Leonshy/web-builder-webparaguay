@@ -2,24 +2,28 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Cms\SiteAssembler;
+use App\Models\Cms\Site;
 use Illuminate\Database\Seeder;
+use Webparaguay\Schema\Schema;
+use Webparaguay\Schema\SchemaValidator;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $doc = json_decode((string) file_get_contents(Schema::examplePath()), true);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        (new SchemaValidator())->assertValid($doc);
+
+        $site = Site::firstOrCreate(
+            ['name' => $doc['settings']['business_name'] ?? 'Sitio de ejemplo'],
+            ['template' => $doc['template'] ?? 'landing', 'theme' => $doc['theme'], 'settings' => $doc['settings']],
+        );
+
+        (new SiteAssembler())->importInto($site, $doc);
+
+        $this->command->info("Sitio «{$site->name}» sembrado: ".$site->pages()->count().' páginas, '
+            .$site->pages()->withCount('sections')->get()->sum('sections_count').' secciones.');
     }
 }

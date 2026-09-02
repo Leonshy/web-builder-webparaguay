@@ -101,6 +101,8 @@ final class SchemaIntrospector
             $field['kind'] = $refKind;
             if ($refKind === 'item') {
                 $field['fields'] = $this->objectFields($this->schema['$defs']['item']);
+            } elseif ($refKind === 'button') {
+                $field['fields'] = $this->objectFields($this->schema['$defs']['button']);
             }
 
             return $field;
@@ -150,6 +152,8 @@ final class SchemaIntrospector
 
         if ($itemKind === 'item') {
             $out['item_fields'] = $this->objectFields($this->schema['$defs']['item']);
+        } elseif ($itemKind === 'button') {
+            $out['item_fields'] = $this->objectFields($this->schema['$defs']['button']);
         } elseif ($itemKind === 'object') {
             $out['item_fields'] = $this->objectFields($items);
         } elseif ($itemKind === 'enum') {
