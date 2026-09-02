@@ -16,6 +16,8 @@ class PublishTest extends TestCase
     {
         $org = Organization::create(['name' => 'Org']);
         $user = $org->users()->create(['name' => 'Juan Metal', 'email' => 'juan@e.com.py', 'password' => bcrypt('x')]);
+        $user->markEmailAsVerified();
+        $this->actingAs($user);
         $project = $org->projects()->create(['user_id' => $user->id, 'name' => 'Sitio', 'status' => 'generated']);
         $project->site()->create(['name' => 'Talleres Yvytu', 'runtime_site_ref' => '7', 'preview_url' => 'http://rt/s/x']);
 
@@ -68,6 +70,8 @@ class PublishTest extends TestCase
     {
         $org = Organization::create(['name' => 'O']);
         $user = $org->users()->create(['name' => 'U', 'email' => 'u@e.com', 'password' => bcrypt('x')]);
+        $user->markEmailAsVerified();
+        $this->actingAs($user);
         $project = $org->projects()->create(['user_id' => $user->id, 'name' => 'P', 'status' => 'draft']);
 
         $this->post(route('publish.store', $project), ['plan' => 'basico', 'domain_kind' => 'subdomain'])

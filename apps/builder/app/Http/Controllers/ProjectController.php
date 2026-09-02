@@ -6,19 +6,15 @@ use App\Ai\AiUsageRecorder;
 use App\Models\Organization;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-/**
- * Vista mínima de proyectos (Tarea 3). Sin auth todavía: en el MVP se opera
- * sobre la primera organización. La entrevista guiada y la orquestación de
- * agentes son la Tarea 4.
- */
 class ProjectController extends Controller
 {
     public function __construct(private AiUsageRecorder $usage) {}
 
     private function org(): Organization
     {
-        return Organization::firstOrCreate(['name' => 'Organización de prueba']);
+        return Auth::user()->organization;
     }
 
     public function index()
@@ -29,6 +25,7 @@ class ProjectController extends Controller
             'organization' => $org,
             'projects' => $org->projects()->with('site')->latest()->get(),
             'aiCostUsd' => $this->usage->totalUsd($org),
+            'canStart' => $org->canStartNewProject(),
         ]);
     }
 
@@ -37,14 +34,11 @@ class ProjectController extends Controller
         $data = $request->validate(['name' => 'required|string|max:120']);
         $org = $this->org();
 
-        $user = $org->owner() ?? $org->users()->create([
-            'name' => 'Titular',
-            'email' => 'titular+'.$org->id.'@ejemplo.com.py',
-            'password' => bcrypt(str()->random(32)),
-        ]);
+        abort_unless($org->canStartNewProject(), 403,
+            'El plan gratuito permite un proyecto activo. Publicá el actual o eliminálo para empezar otro.');
 
         $project = $org->projects()->create([
-            'user_id' => $user->id,
+            'user_id' => Auth::id(),
             'name' => $data['name'],
             'status' => 'draft',
         ]);
@@ -54,8 +48,14 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $project->load('site', 'organization', 'aiUsages');
+        $this->authorizeProject($project);
+        $project->load('site', 'organization', 'aiUsages', 'interviewDraft');
 
         return view('projects.show', ['project' => $project]);
+    }
+
+    private function authorizeProject(Project $project): void
+    {
+        abort_unless($project->organization_id === $this->org()->id, 404);
     }
 }

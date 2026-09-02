@@ -22,6 +22,8 @@ class InterviewFlowTest extends TestCase
     {
         $org = Organization::create(['name' => 'Org']);
         $user = $org->users()->create(['name' => 'U', 'email' => 'u@e.com', 'password' => bcrypt('x')]);
+        $user->markEmailAsVerified();
+        $this->actingAs($user);
 
         return $org->projects()->create(['user_id' => $user->id, 'name' => 'Sitio']);
     }

@@ -8,6 +8,7 @@ return [
 
     // Tag del paquete site-runtime que corren TODAS las instancias.
     'runtime_version' => env('PUBLISHING_RUNTIME_VERSION', '0.1.0'),
+
     'subdomain_base' => env('PUBLISHING_SUBDOMAIN_BASE', 'webparaguay.com'),
 
     // Deploy por git: el servidor Plesk hace pull de este repo.

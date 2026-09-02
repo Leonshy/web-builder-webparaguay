@@ -7,6 +7,8 @@ use App\Generation\Generator;
 use App\Generation\HttpSiteRuntimeClient;
 use App\Generation\SiteRuntimeClient;
 use App\Generation\TemplateGenerator;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Webparaguay\Provisioning\Fake\FakeBillingGateway;
 use Webparaguay\Provisioning\Fake\FakeDomainRegistrar;
@@ -59,6 +61,14 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        //
+        // Control de abuso: tope de generaciones por cuenta (§5.9).
+        RateLimiter::for('generation', function ($request) {
+            $orgId = $request->user()?->organization_id ?: $request->ip();
+
+            return [
+                Limit::perMinute(3)->by("gen:min:{$orgId}"),
+                Limit::perDay((int) config('generation.daily_limit', 20))->by("gen:day:{$orgId}"),
+            ];
+        });
     }
 }

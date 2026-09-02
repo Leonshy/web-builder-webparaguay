@@ -14,12 +14,22 @@
         .card { border:1px solid var(--b); border-radius:10px; padding:1rem 1.25rem; margin-bottom:0.75rem; }
         .mut { color:var(--mut); font-size:0.85rem; }
         .btn { display:inline-block; padding:0.5rem 1rem; border-radius:7px; background:var(--acc); color:#fff; text-decoration:none; border:0; font:inherit; cursor:pointer; }
-        input[type=text] { padding:0.5rem 0.6rem; border:1px solid var(--b); border-radius:6px; font:inherit; }
+        input[type=text], input[type=email], input[type=password] { padding:0.5rem 0.6rem; border:1px solid var(--b); border-radius:6px; font:inherit; }
         table { width:100%; border-collapse:collapse; } td,th { text-align:left; padding:0.4rem 0.5rem; border-bottom:1px solid var(--b); }
+        header .wrap { display:flex; align-items:center; justify-content:space-between; gap:1rem; }
     </style>
 </head>
 <body>
-<header><div class="wrap"><strong>webparaguay · builder</strong> <span class="mut">— cuentas, proyectos, consumo de IA</span></div></header>
+<header><div class="wrap">
+    <span><strong><a href="{{ route('projects.index') }}" style="text-decoration:none;color:inherit">webparaguay · builder</a></strong></span>
+    @auth
+        <span class="mut">
+            {{ auth()->user()->email }} ·
+            <a href="{{ route('profile.edit') }}">Cuenta</a> ·
+            <form method="post" action="{{ route('logout') }}" style="display:inline">@csrf<button class="btn" style="background:none;color:var(--acc);padding:0">Salir</button></form>
+        </span>
+    @endauth
+</div></header>
 <main class="wrap">{{ $slot }}</main>
 </body>
 </html>

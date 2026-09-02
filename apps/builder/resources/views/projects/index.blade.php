@@ -15,9 +15,17 @@
         <p class="mut">Sin proyectos todavía.</p>
     @endforelse
 
-    <form method="post" action="{{ route('projects.store') }}" style="margin-top:1rem">
-        @csrf
-        <input type="text" name="name" placeholder="Nombre del proyecto" required>
-        <button class="btn">Crear proyecto</button>
-    </form>
+    @if($errors->any())
+        <p class="mut" style="color:#c33">{{ $errors->first() }}</p>
+    @endif
+
+    @if($canStart)
+        <form method="post" action="{{ route('projects.store') }}" style="margin-top:1rem">
+            @csrf
+            <input type="text" name="name" placeholder="Nombre del proyecto" required>
+            <button class="btn">Crear proyecto</button>
+        </form>
+    @else
+        <p class="mut" style="margin-top:1rem">El plan gratuito permite un proyecto activo. Publicá el actual para empezar otro.</p>
+    @endif
 </x-projects.layout>

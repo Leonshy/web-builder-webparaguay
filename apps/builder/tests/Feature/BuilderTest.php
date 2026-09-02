@@ -63,11 +63,50 @@ class BuilderTest extends TestCase
         $this->assertNotNull($first->occurred_at);
     }
 
-    public function test_la_pantalla_de_proyectos_muestra_el_consumo(): void
+    public function test_la_pantalla_de_proyectos_requiere_sesion(): void
     {
+        $this->get('/projects')->assertRedirect(route('login'));
+    }
+
+    public function test_el_email_sin_verificar_no_entra_al_builder(): void
+    {
+        $user = (new RegisterAccount())->handle('Sin Verificar', 's@ejemplo.com.py', 'password-larga');
+
+        $this->actingAs($user)->get('/projects')->assertRedirect(route('verification.notice'));
+    }
+
+    public function test_un_usuario_verificado_ve_sus_proyectos_y_puede_crear_uno(): void
+    {
+        $user = (new RegisterAccount())->handle('Dueño', 'd@ejemplo.com.py', 'password-larga');
+        $user->forceFill(['email_verified_at' => now()])->save();
+        $this->actingAs($user);
+
         $this->get('/projects')->assertOk()->assertSee('consumo de IA');
 
         $this->post('/projects', ['name' => 'Mi sitio'])->assertRedirect();
-        $this->assertDatabaseHas('projects', ['name' => 'Mi sitio']);
+        $this->assertDatabaseHas('projects', ['name' => 'Mi sitio', 'organization_id' => $user->organization_id]);
+    }
+
+    public function test_el_plan_free_permite_un_solo_proyecto_activo(): void
+    {
+        $user = (new RegisterAccount())->handle('Dueño', 'd@ejemplo.com.py', 'password-larga');
+        $user->forceFill(['email_verified_at' => now()])->save();
+        $this->actingAs($user);
+
+        $this->post('/projects', ['name' => 'Uno'])->assertRedirect();
+        $this->post('/projects', ['name' => 'Dos'])->assertStatus(403);
+
+        $this->assertSame(1, $user->organization->projects()->count());
+    }
+
+    public function test_un_usuario_no_ve_proyectos_de_otra_organizacion(): void
+    {
+        $mine = (new RegisterAccount())->handle('Yo', 'yo@e.com.py', 'password-larga');
+        $mine->forceFill(['email_verified_at' => now()])->save();
+
+        $other = (new RegisterAccount())->handle('Otro', 'otro@e.com.py', 'password-larga');
+        $otherProject = $other->organization->projects()->create(['user_id' => $other->id, 'name' => 'Ajeno']);
+
+        $this->actingAs($mine)->get(route('projects.show', $otherProject))->assertNotFound();
     }
 }
