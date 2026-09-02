@@ -117,5 +117,7 @@ final class PublishInput
         public readonly HostingPlan $plan,
         public readonly DomainRequest $domain,
         public readonly string $subdomainLabel,   // etiqueta para <label>.webparaguay.com
+        /** Datos de facturación para el alta de cliente (WHMCS). */
+        public readonly array $billing = [],      // phone, address, city, state, postcode, country
     ) {}
 }

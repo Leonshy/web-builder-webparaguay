@@ -15,7 +15,7 @@ class PublishTest extends TestCase
 
     private function generatedProject(): Project
     {
-        $org = Organization::create(['name' => 'Org']);
+        $org = Organization::create(['name' => 'Org', 'billing_phone' => '+595 981 000 000', 'billing_address' => 'Palma 123', 'billing_city' => 'Asunción', 'billing_country' => 'PY']);
         $user = $org->users()->create(['name' => 'Juan Metal', 'email' => 'juan@e.com.py', 'password' => bcrypt('x')]);
         $user->markEmailAsVerified();
         $this->actingAs($user);

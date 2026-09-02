@@ -52,7 +52,7 @@ final class WhmcsProvisioner implements SitePublisher
 
     public function publish(PublishInput $input): PublishResult
     {
-        $clientId = $this->ensureClient($input->customerName, $input->customerEmail);
+        $clientId = $this->ensureClient($input->customerName, $input->customerEmail, $input->billing);
         $fqdn = "{$input->subdomainLabel}.{$this->subdomainBase}";
 
         $order = $this->addOrder($clientId, $fqdn);
@@ -110,20 +110,26 @@ final class WhmcsProvisioner implements SitePublisher
         return $clientId !== null && $this->serviceStatus($clientId, $serviceId) === 'Active';
     }
 
-    private function ensureClient(string $name, string $email): string
+    /** @param array<string,string> $billing */
+    private function ensureClient(string $name, string $email, array $billing = []): string
     {
         if ($id = $this->findClientId($email)) {
             return $id;
         }
 
         [$first, $last] = array_pad(explode(' ', trim($name), 2), 2, '');
-        $res = $this->call('AddClient', [
+        $res = $this->call('AddClient', array_filter([
             'firstname' => $first ?: $name,
             'lastname' => $last ?: '-',
             'email' => $email,
-            'country' => 'PY',
+            'phonenumber' => $billing['phone'] ?? null,
+            'address1' => $billing['address'] ?? null,
+            'city' => $billing['city'] ?? null,
+            'state' => $billing['state'] ?? ($billing['city'] ?? null),
+            'postcode' => $billing['postcode'] ?? null,
+            'country' => $billing['country'] ?? 'PY',
             'noemail' => true,
-        ]);
+        ], fn ($v) => $v !== null && $v !== ''));
 
         if (($res['result'] ?? null) !== 'success') {
             throw new ProvisioningException('WHMCS AddClient falló: '.($res['message'] ?? 'desconocido'));

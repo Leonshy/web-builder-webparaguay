@@ -37,7 +37,31 @@
             <a href="{{ route('interview', $project) }}">Ir a la entrevista</a>.</p>
     @else
         <p class="mut"><strong>Publicar = comprar.</strong> El sitio se cobra, se aprovisiona el hosting y se despliega el paquete del CMS.</p>
-        <form method="post" action="{{ route('publish.store', $project) }}" class="card">
+
+        <form method="post" action="{{ route('publish.billing', $project) }}" class="card">
+            @csrf
+            <p><strong>Datos de facturación</strong> <span class="mut">— los necesita el sistema de facturación</span></p>
+            @php($o = $organization)
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <label>Teléfono *<br><input type="text" name="billing_phone" value="{{ old('billing_phone', $o->billing_phone) }}" required></label>
+                <label>Ciudad *<br><input type="text" name="billing_city" value="{{ old('billing_city', $o->billing_city) }}" required></label>
+                <label style="grid-column:1/-1">Dirección *<br><input type="text" name="billing_address" value="{{ old('billing_address', $o->billing_address) }}" required></label>
+                <label>Departamento<br><input type="text" name="billing_state" value="{{ old('billing_state', $o->billing_state) }}"></label>
+                <label>Código postal<br><input type="text" name="billing_postcode" value="{{ old('billing_postcode', $o->billing_postcode) }}"></label>
+                <label>País *<br>
+                    <select name="billing_country" required>
+                        <option value="PY" @selected(($o->billing_country ?: 'PY') === 'PY')>Paraguay</option>
+                        <option value="AR" @selected($o->billing_country === 'AR')>Argentina</option>
+                        <option value="BR" @selected($o->billing_country === 'BR')>Brasil</option>
+                    </select>
+                </label>
+            </div>
+            <button class="btn" style="margin-top:8px">Guardar datos</button>
+            @if($organization->billingComplete())<span class="mut" style="margin-left:8px">✓ completo</span>@endif
+        </form>
+
+        <form method="post" action="{{ route('publish.store', $project) }}" class="card"
+              @unless($organization->billingComplete()) style="opacity:.5;pointer-events:none" @endunless>
             @csrf
             <p><strong>Plan</strong></p>
             @foreach($plans as $code => $plan)

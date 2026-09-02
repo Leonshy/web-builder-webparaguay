@@ -11,7 +11,15 @@
                     <span class="mut">(no indexable, compartible)</span></p>
             @endif
         </div>
-        <p class="mut">El preview y la edición corren en site-runtime. La publicación (cobro → WHMCS → Plesk) es un paso posterior.</p>
+
+        @if($project->status === 'generated')
+            <a class="wf-link" href="{{ route('publish.show', $project) }}"><span class="btn">Publicar el sitio</span></a>
+        @elseif($project->status === 'awaiting_payment')
+            <p><a href="{{ route('publish.show', $project) }}">Publicación en curso — esperando confirmación de pago</a></p>
+        @elseif($project->status === 'published')
+            <p><a href="{{ route('publish.show', $project) }}">En línea ↗</a></p>
+        @endif
+        <p class="mut" style="margin-top:8px">El preview y la edición corren en site-runtime. La publicación cobra y aprovisiona el hosting.</p>
     @else
         <p class="mut">Todavía no se generó. <a href="{{ route('interview', ['project' => $project, 'stage' => 'review']) }}">Ir a la revisión</a>.</p>
     @endif

@@ -6,15 +6,36 @@ use App\Models\Project;
 use App\Publishing\Plans;
 use App\Publishing\PublishSite;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Webparaguay\Provisioning\ProvisioningException;
 
 class PublishController extends Controller
 {
     public function show(Project $project)
     {
-        $project->load('site', 'payments', 'backofficeTasks');
+        $project->load('site', 'payments', 'backofficeTasks', 'organization');
 
-        return view('publish.show', ['project' => $project, 'plans' => Plans::all()]);
+        return view('publish.show', [
+            'project' => $project,
+            'plans' => Plans::all(),
+            'organization' => $project->organization,
+        ]);
+    }
+
+    public function saveBilling(Request $request, Project $project)
+    {
+        $data = $request->validate([
+            'billing_phone' => 'required|string|max:40',
+            'billing_address' => 'required|string|max:200',
+            'billing_city' => 'required|string|max:80',
+            'billing_state' => 'nullable|string|max:80',
+            'billing_postcode' => 'nullable|string|max:20',
+            'billing_country' => 'required|string|size:2',
+        ]);
+
+        Auth::user()->organization->update($data);
+
+        return redirect()->route('publish.show', $project)->with('ok', 'Datos de facturación guardados.');
     }
 
     public function store(Request $request, Project $project, PublishSite $publish)
@@ -35,6 +56,6 @@ class PublishController extends Controller
             return back()->withErrors(['publicacion' => $e->getMessage()]);
         }
 
-        return redirect()->route('publish.show', $project)->with('ok', 'Sitio publicado.');
+        return redirect()->route('publish.show', $project)->with('ok', 'Publicación iniciada.');
     }
 }

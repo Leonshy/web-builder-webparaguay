@@ -7,7 +7,30 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Organization extends Model
 {
-    protected $fillable = ['name', 'plan', 'billing_email', 'credit_balance'];
+    protected $fillable = [
+        'name', 'plan', 'billing_email', 'credit_balance',
+        'billing_phone', 'billing_address', 'billing_city', 'billing_state',
+        'billing_postcode', 'billing_country',
+    ];
+
+    public function billingComplete(): bool
+    {
+        return filled($this->billing_phone) && filled($this->billing_address)
+            && filled($this->billing_city) && filled($this->billing_country);
+    }
+
+    /** @return array<string,string> para WHMCS AddClient */
+    public function billingProfile(): array
+    {
+        return [
+            'phone' => (string) $this->billing_phone,
+            'address' => (string) $this->billing_address,
+            'city' => (string) $this->billing_city,
+            'state' => (string) ($this->billing_state ?: $this->billing_city),
+            'postcode' => (string) ($this->billing_postcode ?: '0000'),
+            'country' => (string) ($this->billing_country ?: 'PY'),
+        ];
+    }
 
     public function isFree(): bool
     {

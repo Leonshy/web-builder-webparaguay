@@ -35,6 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
         Route::get('/projects/{project}/publish', [PublishController::class, 'show'])->name('publish.show');
+        Route::post('/projects/{project}/publish/billing', [PublishController::class, 'saveBilling'])->name('publish.billing');
         Route::post('/projects/{project}/publish', [PublishController::class, 'store'])->name('publish.store');
     });
 });
