@@ -9,7 +9,11 @@
     @forelse($projects as $project)
         <div class="card">
             <strong><a href="{{ route('projects.show', $project) }}">{{ $project->name }}</a></strong>
-            <div class="mut">{{ $project->status }} @if($project->site) · sitio: {{ $project->site->name }} @endif</div>
+            <div class="mut">{{ $project->status }} @if($project->site) · sitio: {{ $project->site->name }} @endif
+                @if($project->status === 'published' && $project->site?->cmsUrl())
+                    · <a href="{{ $project->site->cmsUrl() }}" target="_blank">Gestionar mi sitio ↗</a>
+                @endif
+            </div>
         </div>
     @empty
         <p class="mut">Sin proyectos todavía.</p>

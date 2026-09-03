@@ -15,4 +15,10 @@ class Site extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    /** URL del panel de autogestión en la instancia publicada. */
+    public function cmsUrl(): ?string
+    {
+        return $this->live_fqdn ? 'https://'.$this->live_fqdn.'/cms' : null;
+    }
 }
