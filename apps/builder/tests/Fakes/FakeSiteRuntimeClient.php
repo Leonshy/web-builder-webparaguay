@@ -12,19 +12,31 @@ use Webparaguay\Schema\SchemaValidator;
  */
 class FakeSiteRuntimeClient implements SiteRuntimeClient
 {
-    /** @var array<int,array{name:string,baseUrl:?string}> */
+    /** @var array<int,array{name:string,baseUrl:?string,ownerEmail:?string,ownerPassword:?string}> */
     public array $created = [];
 
     /** @var array<int,array{fqdn:string,baseUrl:?string}> */
     public array $published = [];
 
-    public function createSite(Project $project, string $name, array $document, ?string $baseUrl = null): array
-    {
+    public function createSite(
+        Project $project,
+        string $name,
+        array $document,
+        ?string $baseUrl = null,
+        ?string $ownerEmail = null,
+        ?string $ownerPassword = null,
+        ?string $ownerName = null,
+    ): array {
         if ((new SchemaValidator())->errors($document) !== []) {
             throw new \RuntimeException('documento inválido llegó al runtime');
         }
 
-        $this->created[] = ['name' => $name, 'baseUrl' => $baseUrl];
+        $this->created[] = [
+            'name' => $name,
+            'baseUrl' => $baseUrl,
+            'ownerEmail' => $ownerEmail,
+            'ownerPassword' => $ownerPassword,
+        ];
 
         return ['site_ref' => 'rt_'.$project->id, 'preview_url' => 'http://runtime.test/s/tok'];
     }

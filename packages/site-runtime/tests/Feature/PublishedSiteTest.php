@@ -45,6 +45,15 @@ class PublishedSiteTest extends TestCase
     {
         $this->publishedSite();
 
-        $this->get('/cms')->assertOk();
+        // /cms sigue resolviendo al CMS (redirige al login), no cae en el
+        // catch-all de páginas públicas que daría 404.
+        $this->get('/cms')->assertRedirect(route('login'));
+    }
+
+    public function test_una_pagina_publica_por_slug_se_sirve(): void
+    {
+        $this->publishedSite();
+
+        $this->get('/nosotros')->assertOk();
     }
 }

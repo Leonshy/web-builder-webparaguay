@@ -37,7 +37,11 @@ final class ActivateOrder
             );
         }
 
-        $result = $this->runtime->createSite($project, $site->name, $site->document, $instanceUrl);
+        $cms = CmsCredentials::ensure($site);
+        $result = $this->runtime->createSite(
+            $project, $site->name, $site->document, $instanceUrl,
+            $cms['email'], $cms['password'], $cms['name'],
+        );
 
         DB::transaction(function () use ($project, $site, $fqdn, $result) {
             $site->update([

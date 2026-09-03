@@ -96,8 +96,12 @@ final class PublishSite
         if (! $awaiting) {
             // La suscripción ya está activa: sembrar el sitio en la instancia.
             $instanceUrl = 'https://'.$result->domain->liveFqdn;
+            $cms = CmsCredentials::ensure($site);
             try {
-                $seeded = $this->runtime->createSite($project, $site->name, $site->document, $instanceUrl);
+                $seeded = $this->runtime->createSite(
+                    $project, $site->name, $site->document, $instanceUrl,
+                    $cms['email'], $cms['password'], $cms['name'],
+                );
                 $site->update(['runtime_site_ref' => $seeded['site_ref']]);
                 $this->runtime->markPublished($seeded['site_ref'], $result->domain->liveFqdn, $instanceUrl);
             } catch (\Throwable $e) {

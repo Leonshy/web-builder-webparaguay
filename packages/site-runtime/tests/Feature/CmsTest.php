@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Cms\SiteAssembler;
 use App\Models\Cms\Section;
 use App\Models\Cms\Site;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Webparaguay\Schema\Schema;
@@ -13,6 +14,12 @@ use Webparaguay\Schema\SchemaValidator;
 class CmsTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->actingAs(User::factory()->create());
+    }
 
     private function seedSite(): Site
     {

@@ -53,6 +53,12 @@
         <div class="cms-wrap">
             <strong><a href="{{ route('cms.index') }}" style="text-decoration:none;color:inherit">webparaguay · CMS</a></strong>
             <span class="cms-muted">datos = JSON validado contra el esquema</span>
+            @auth
+                <form method="post" action="{{ route('logout') }}" style="margin-left:auto">
+                    @csrf
+                    <button class="cms-btn cms-btn--ghost" type="submit" style="padding:0.3rem 0.7rem">Salir</button>
+                </form>
+            @endauth
         </div>
     </header>
     <main class="cms-wrap">

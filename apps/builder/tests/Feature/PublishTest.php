@@ -22,7 +22,7 @@ class PublishTest extends TestCase
         $project = $org->projects()->create(['user_id' => $user->id, 'name' => 'Sitio', 'status' => 'generated']);
         $project->site()->create(['name' => 'Talleres Yvytu', 'runtime_site_ref' => '7', 'preview_url' => 'http://rt/s/x', 'document' => json_decode((string) file_get_contents(\Webparaguay\Schema\Schema::examplePath()), true)]);
 
-        $this->app->bind(SiteRuntimeClient::class, FakeSiteRuntimeClient::class);
+        $this->app->singleton(SiteRuntimeClient::class, FakeSiteRuntimeClient::class);
 
         return $project;
     }
@@ -41,6 +41,13 @@ class PublishTest extends TestCase
         $this->assertStringEndsWith('.'.config('publishing.subdomain_base'), $project->site->live_fqdn);
         $this->assertSame('0.1.0', $project->site->runtime_version);
         $this->assertDatabaseHas('payments', ['project_id' => $project->id, 'status' => 'paid']);
+
+        // Se generan credenciales del CMS y se pasan a la instancia.
+        $this->assertSame('juan@e.com.py', $project->site->cms_email);
+        $this->assertNotEmpty($project->site->cms_password);
+        $fake = $this->app->make(SiteRuntimeClient::class);
+        $this->assertSame('juan@e.com.py', $fake->created[0]['ownerEmail']);
+        $this->assertSame($project->site->cms_password, $fake->created[0]['ownerPassword']);
     }
 
     public function test_com_py_publica_en_subdominio_y_abre_tarea_de_backoffice(): void

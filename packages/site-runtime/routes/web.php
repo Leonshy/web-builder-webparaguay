@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Cms\AuthController;
 use App\Http\Controllers\Cms\CmsController;
 use App\Http\Controllers\Cms\CmsPageController;
 use App\Http\Controllers\Cms\CmsPreviewController;
@@ -31,8 +32,13 @@ Route::get('/s/{token}/{slug?}', CmsPreviewController::class)
 Route::post('/internal/sites', CreateSiteController::class)->name('internal.sites.create');
 Route::post('/internal/sites/{site}/publish', MarkPublishedController::class)->name('internal.sites.publish');
 
+// Login del CMS.
+Route::get('/cms/login', [AuthController::class, 'show'])->name('login');
+Route::post('/cms/login', [AuthController::class, 'login'])->name('login.attempt');
+Route::post('/cms/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
 // CMS. Formularios derivados del esquema; toda escritura valida antes de guardar.
-Route::prefix('cms')->group(function () {
+Route::prefix('cms')->middleware('auth')->group(function () {
     Route::get('/', [CmsController::class, 'index'])->name('cms.index');
 
     Route::get('/sites/{site}', [CmsController::class, 'show'])->name('cms.site');

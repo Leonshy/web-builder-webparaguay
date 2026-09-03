@@ -18,7 +18,15 @@ interface SiteRuntimeClient
      * @param  array<string,mixed>  $document  documento de sitio YA validado
      * @return array{site_ref:string, preview_url:string}
      */
-    public function createSite(Project $project, string $name, array $document, ?string $baseUrl = null): array;
+    public function createSite(
+        Project $project,
+        string $name,
+        array $document,
+        ?string $baseUrl = null,
+        ?string $ownerEmail = null,
+        ?string $ownerPassword = null,
+        ?string $ownerName = null,
+    ): array;
 
     /** Informa a site-runtime que el sitio quedó publicado en un dominio. */
     public function markPublished(string $siteRef, string $fqdn, ?string $baseUrl = null): void;

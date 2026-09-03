@@ -15,6 +15,15 @@
             <strong>En línea</strong>
             <p>Sitio: <a href="https://{{ $project->site->live_fqdn }}" target="_blank">{{ $project->site->live_fqdn }}</a></p>
             <p class="mut">Paquete del CMS: v{{ $project->site->runtime_version }} · desplegado por git</p>
+            @if($project->site->cms_email)
+                <div class="card" style="background:#f6f8ff;border-color:#c7d2fe">
+                    <strong>Panel para autogestionar el sitio</strong>
+                    <p>Entrar: <a href="https://{{ $project->site->live_fqdn }}/cms" target="_blank">{{ $project->site->live_fqdn }}/cms</a></p>
+                    <p class="mut">Usuario: <code>{{ $project->site->cms_email }}</code><br>
+                        Contraseña: <code>{{ $project->site->cms_password }}</code></p>
+                    <p class="mut" style="font-size:12px">Guardala: se muestra acá para entregársela al cliente. Puede cambiarla desde el panel.</p>
+                </div>
+            @endif
             @if($project->site->domain_status === 'compy_pending')
                 <p class="mut">Dominio <strong>{{ $project->site->pending_fqdn }}</strong>: en trámite en NIC.py (24–72 h).
                     El sitio ya está vivo en el subdominio; al completarse se reapunta.</p>

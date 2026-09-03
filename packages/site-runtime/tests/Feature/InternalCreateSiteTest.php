@@ -42,6 +42,24 @@ class InternalCreateSiteTest extends TestCase
             ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
     }
 
+    public function test_crea_el_dueno_del_cms_con_las_credenciales_del_builder(): void
+    {
+        $this->withToken('secreto-de-prueba')->postJson('/internal/sites', [
+            'builder_project_ref' => 'proj-7',
+            'name' => 'Cyber ya',
+            'document' => $this->doc(),
+            'owner_email' => 'dueno@cyberya.com',
+            'owner_password' => 'clave-super-larga',
+            'owner_name' => 'Leo',
+        ])->assertCreated();
+
+        $this->assertDatabaseHas('users', ['email' => 'dueno@cyberya.com', 'name' => 'Leo']);
+
+        // Puede entrar al CMS con esas credenciales.
+        $this->post('/cms/login', ['email' => 'dueno@cyberya.com', 'password' => 'clave-super-larga'])
+            ->assertRedirect(route('cms.index'));
+    }
+
     public function test_reimportar_el_mismo_proyecto_reemplaza_el_contenido(): void
     {
         $payload = ['builder_project_ref' => 'p1', 'name' => 'X', 'document' => $this->doc()];
