@@ -106,6 +106,7 @@ class AppServiceProvider extends ServiceProvider
                 letsencryptEmail: (string) $p['letsencrypt_email'],
                 dbServer: (string) $p['db_server'],
                 phpBin: (string) $p['php_bin'],
+                verifyTls: (bool) $p['verify_tls'],
             );
         });
 

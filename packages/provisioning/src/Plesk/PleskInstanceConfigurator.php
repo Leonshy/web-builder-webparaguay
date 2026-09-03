@@ -28,6 +28,7 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
         private string $letsencryptEmail,
         private string $dbServer = 'localhost',
         private string $phpBin = '/opt/plesk/php/8.4/bin/php',
+        private bool $verifyTls = true,
         private ?Client $http = null,
     ) {
         if ($this->baseUrl === '' || $this->apiKey === '') {
@@ -38,6 +39,8 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             'base_uri' => rtrim($baseUrl, '/').'/api/v2/',
             'timeout' => 120,
             'http_errors' => false,
+            // El panel suele responder en la IP con un cert que no matchea.
+            'verify' => $verifyTls,
             'headers' => [
                 'X-API-Key' => $apiKey,
                 'Content-Type' => 'application/json',
