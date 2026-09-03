@@ -38,7 +38,7 @@ class PublishTest extends TestCase
         $project->refresh();
         $this->assertSame('published', $project->status);
         $this->assertSame('subdomain_live', $project->site->domain_status);
-        $this->assertStringEndsWith('.webparaguay.com', $project->site->live_fqdn);
+        $this->assertStringEndsWith('.'.config('publishing.subdomain_base'), $project->site->live_fqdn);
         $this->assertSame('0.1.0', $project->site->runtime_version);
         $this->assertDatabaseHas('payments', ['project_id' => $project->id, 'status' => 'paid']);
     }
