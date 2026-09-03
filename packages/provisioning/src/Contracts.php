@@ -32,6 +32,19 @@ interface HostingProvisioner
 }
 
 /**
+ * Aprovisiona una suscripción de hosting YA creada para que corra el CMS:
+ * base de datos, document root, repositorio git al tag, `.env` y SSL.
+ * Hoy: Plesk por API. El builder llama a esta interfaz.
+ */
+interface InstanceConfigurator
+{
+    /**
+     * @return array{db: string, db_user: string}
+     */
+    public function configure(string $fqdn): array;
+}
+
+/**
  * Registro de dominios. gTLD (.com, .net) por WHMCS: automático.
  * `.com.py` por NIC.py: NO tiene API, es manual (formulario + transferencia).
  */

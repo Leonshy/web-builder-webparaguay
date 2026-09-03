@@ -16,7 +16,9 @@ use Webparaguay\Provisioning\Fake\FakeBillingGateway;
 use Webparaguay\Provisioning\Fake\FakeDomainRegistrar;
 use Webparaguay\Provisioning\Fake\FakeHostingProvisioner;
 use Webparaguay\Provisioning\HostingProvisioner;
+use Webparaguay\Provisioning\InstanceConfigurator;
 use Webparaguay\Provisioning\Plesk\PleskHostingProvisioner;
+use Webparaguay\Provisioning\Plesk\PleskInstanceConfigurator;
 use Webparaguay\Provisioning\Provisioner;
 use Webparaguay\Provisioning\SitePublisher;
 use Webparaguay\Provisioning\Whmcs\WhmcsBillingGateway;
@@ -89,6 +91,21 @@ class AppServiceProvider extends ServiceProvider
                 paymentMethod: config('publishing.whmcs_payment_method', 'banktransfer'),
                 taxIdFieldId: (int) config('publishing.whmcs_cf_tax_id'),
                 companyFieldId: (int) config('publishing.whmcs_cf_company'),
+            );
+        });
+
+        $this->app->singleton(InstanceConfigurator::class, function () {
+            $p = config('publishing.plesk');
+
+            return new PleskInstanceConfigurator(
+                baseUrl: (string) $p['url'],
+                apiKey: (string) $p['api_key'],
+                repoUrl: (string) $p['git_repo_url'],
+                branch: 'site-runtime-v'.config('publishing.runtime_version'),
+                sharedToken: (string) config('generation.site_runtime_token'),
+                letsencryptEmail: (string) $p['letsencrypt_email'],
+                dbServer: (string) $p['db_server'],
+                phpBin: (string) $p['php_bin'],
             );
         });
 

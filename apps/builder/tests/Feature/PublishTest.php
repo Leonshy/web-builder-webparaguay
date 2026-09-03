@@ -6,8 +6,10 @@ use App\Generation\SiteRuntimeClient;
 use App\Models\Organization;
 use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Fakes\FakeInstanceConfigurator;
 use Tests\Fakes\FakeSiteRuntimeClient;
 use Tests\TestCase;
+use Webparaguay\Provisioning\InstanceConfigurator;
 
 class PublishTest extends TestCase
 {
@@ -75,6 +77,48 @@ class PublishTest extends TestCase
     {
         $project = $this->generatedProject();
         $this->get(route('projects.cms', $project))->assertNotFound();
+    }
+
+    public function test_publicar_aprovisiona_la_instancia_de_plesk_una_sola_vez(): void
+    {
+        config(['publishing.plesk.api_key' => 'key-test']);
+        $plesk = new FakeInstanceConfigurator();
+        $this->app->instance(InstanceConfigurator::class, $plesk);
+
+        $project = $this->generatedProject();
+        $this->post(route('publish.store', $project), ['plan' => 'web', 'domain_kind' => 'subdomain'])->assertRedirect();
+        $project->refresh();
+
+        $this->assertSame('published', $project->status);
+        $this->assertCount(1, $plesk->configured);
+        $this->assertSame($project->site->live_fqdn, $plesk->configured[0]);
+        $this->assertNotNull($project->site->instance_configured_at);
+
+        // Un segundo intento de siembra no vuelve a aprovisionar.
+        app(\App\Publishing\SeedInstance::class)->run($project->fresh());
+        $this->assertCount(1, $plesk->configured);
+    }
+
+    public function test_si_plesk_no_esta_listo_queda_pendiente_y_se_reintenta(): void
+    {
+        config(['publishing.plesk.api_key' => 'key-test']);
+        $plesk = new FakeInstanceConfigurator();
+        $plesk->fail = true;
+        $this->app->instance(InstanceConfigurator::class, $plesk);
+
+        $project = $this->generatedProject();
+        $this->post(route('publish.store', $project), ['plan' => 'web', 'domain_kind' => 'subdomain'])->assertRedirect();
+        $project->refresh();
+
+        $this->assertSame('awaiting_payment', $project->status);
+        $this->assertDatabaseHas('backoffice_tasks', ['project_id' => $project->id, 'kind' => 'configure_instance', 'status' => 'open']);
+
+        // Cuando Plesk responde, el cron lo termina.
+        $plesk->fail = false;
+        $this->artisan('builder:seed-pending')->assertSuccessful();
+        $project->refresh();
+        $this->assertSame('published', $project->status);
+        $this->assertSame(0, $project->backofficeTasks()->where('status', 'open')->count());
     }
 
     public function test_com_py_publica_en_subdominio_y_abre_tarea_de_backoffice(): void

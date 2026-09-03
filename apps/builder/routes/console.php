@@ -10,3 +10,4 @@ Artisan::command('inspire', function () {
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('builder:purge-drafts')->dailyAt('03:00');
+Schedule::command('builder:seed-pending')->everyMinute()->withoutOverlapping();

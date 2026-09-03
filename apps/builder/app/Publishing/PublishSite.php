@@ -27,6 +27,7 @@ final class PublishSite
     public function __construct(
         private SitePublisher $publisher,
         private SiteRuntimeClient $runtime,
+        private SeedInstance $seeder,
     ) {}
 
     public function handle(Project $project, string $planCode, string $domainKind, ?string $domainValue): void
@@ -93,26 +94,15 @@ final class PublishSite
             }
         });
 
-        if (! $awaiting) {
-            // La suscripción ya está activa: sembrar el sitio en la instancia.
-            $instanceUrl = 'https://'.$result->domain->liveFqdn;
-            $cms = CmsCredentials::ensure($site);
-            try {
-                $seeded = $this->runtime->createSite(
-                    $project, $site->name, $site->document, $instanceUrl,
-                    $cms['email'], $cms['password'], $cms['name'],
-                );
-                $site->update(['runtime_site_ref' => $seeded['site_ref']]);
-                $this->runtime->markPublished($seeded['site_ref'], $result->domain->liveFqdn, $instanceUrl);
-            } catch (\Throwable $e) {
-                // La instancia todavía no tiene el CMS desplegado. Queda una
-                // tarea de back-office; el sitio se siembra con activate-order.
-                $project->backofficeTasks()->create([
-                    'kind' => 'seed_instance',
-                    'note' => "Desplegar site-runtime en {$result->domain->liveFqdn} y correr builder:activate-order {$project->id}. ({$e->getMessage()})",
-                ]);
-                $project->update(['status' => 'awaiting_payment']);
-            }
+        if (! $awaiting && ! $this->seeder->run($project->refresh())) {
+            // La instancia todavía no responde (el Event Handler de Plesk está
+            // aprovisionando el CMS + SSL). Queda la tarea; `builder:seed-pending`
+            // lo reintenta solo hasta que la instancia está lista.
+            $project->backofficeTasks()->create([
+                'kind' => 'seed_instance',
+                'note' => "Esperando que la instancia {$result->domain->liveFqdn} termine de aprovisionarse. Se reintenta solo.",
+            ]);
+            $project->update(['status' => 'awaiting_payment']);
         }
     }
 

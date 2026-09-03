@@ -32,5 +32,10 @@ return [
         'url' => env('PLESK_URL', ''),
         'api_key' => env('PLESK_API_KEY', ''),
         'service_plan' => env('PLESK_SERVICE_PLAN', 'IA-host'),
+        'db_server' => env('PLESK_DB_SERVER', 'localhost'),
+        'php_bin' => env('PLESK_PHP_BIN', '/opt/plesk/php/8.4/bin/php'),
+        'letsencrypt_email' => env('PLESK_LETSENCRYPT_EMAIL', 'soporte@webparaguay.com'),
+        // El repo debe ser clonable por el servidor sin llave (HTTPS público).
+        'git_repo_url' => env('PLESK_GIT_REPO', 'https://github.com/Leonshy/web-builder-webparaguay.git'),
     ],
 ];
