@@ -10,7 +10,7 @@ return [
     'runtime_version' => env('PUBLISHING_RUNTIME_VERSION', '0.1.0'),
     'plan_price' => (int) env('PUBLISHING_PLAN_PRICE', 39900), // guaraníes/mes, debe coincidir con el producto WHMCS
 
-    'subdomain_base' => env('PUBLISHING_SUBDOMAIN_BASE', 'webparaguay.com'),
+    'subdomain_base' => env('PUBLISHING_SUBDOMAIN_BASE', 'sites.naranja.com.py'),
 
     // Deploy por git: el servidor Plesk hace pull de este repo.
     'git_repo_url' => env('PUBLISHING_GIT_REPO', 'git@github.com:Leonshy/web-builder-webparaguay.git'),
