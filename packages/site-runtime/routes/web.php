@@ -8,9 +8,11 @@ use App\Http\Controllers\ContactStubController;
 use App\Http\Controllers\Internal\CreateSiteController;
 use App\Http\Controllers\Internal\MarkPublishedController;
 use App\Http\Controllers\PreviewController;
+use App\Http\Controllers\PublishedSiteController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect('/cms'));
+// Sitio público publicado: home en la raíz del dominio de la instancia.
+Route::get('/', PublishedSiteController::class)->name('published.home');
 
 // Stub del formulario de contacto. El envío real es del sistema (Tarea posterior).
 Route::post('/contacto', ContactStubController::class)->name('contact.submit');
@@ -49,3 +51,9 @@ Route::prefix('cms')->group(function () {
     Route::post('/sections/{section}/move', [CmsSectionController::class, 'move'])->name('cms.section.move');
     Route::delete('/sections/{section}', [CmsSectionController::class, 'destroy'])->name('cms.section.destroy');
 });
+
+// Páginas internas del sitio público publicado. Va al final: no debe tapar
+// las rutas del CMS ni las de preview.
+Route::get('/{slug}', PublishedSiteController::class)
+    ->where('slug', '(?!cms|preview|variants|s|contacto|internal)[a-z0-9-]+')
+    ->name('published.page');
