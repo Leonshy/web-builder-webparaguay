@@ -1,0 +1,360 @@
+{
+  "schema_version": "0.1",
+  "template": "institucional",
+
+  "theme": {
+    "colors": {
+      "primary": "#1F6F5C",
+      "accent": "#E0A24B",
+      "background": "#FBFAF7",
+      "text": "#1A1A1A"
+    },
+    "typography": {
+      "pairing": "playfair-inter",
+      "heading_weight": 700,
+      "body_weight": 400,
+      "scale": "normal"
+    },
+    "shape": {
+      "radius": "md",
+      "shadow": "soft",
+      "density": "normal"
+    }
+  },
+
+  "settings": {
+    "business_name": "Talleres Yvytu",
+    "tagline": "Metalurgia de precision en Paraguay",
+    "industry": "Metalurgia",
+    "email": "contacto@ejemplo.com.py",
+    "phone": "+595 21 000 000",
+    "whatsapp": "+595 981 000 000",
+    "address": "Ruta Transchaco km 12, Mariano Roque Alonso",
+    "schedule": "Lunes a viernes de 7:00 a 17:00",
+    "socials": [
+      { "platform": "instagram", "url": "https://instagram.com/ejemplo" },
+      { "platform": "linkedin", "url": "https://linkedin.com/company/ejemplo" }
+    ]
+  },
+
+  "layout": {
+    "navbar": {
+      "variant": "simple",
+      "logo": { "src": "media/logo.svg", "alt": "Talleres Yvytu" },
+      "button": { "label": "Pedir cotizacion", "action": "anchor", "anchor": "contacto" },
+      "sticky": true,
+      "transparent_on_hero": true
+    },
+    "footer": {
+      "variant": "full",
+      "description": "Fabricacion y mecanizado de piezas metalicas para la industria paraguaya desde 2004.",
+      "show_socials": true
+    }
+  },
+
+  "pages": [
+    {
+      "slug": "inicio",
+      "title": "Inicio",
+      "is_home": true,
+      "order": 0,
+      "seo": {
+        "title": "Talleres Yvytu | Metalurgia de precision",
+        "description": "Fabricacion y mecanizado de piezas metalicas para la industria paraguaya. Cotizaciones en 48 horas."
+      },
+      "sections": [
+        {
+          "id": "sec_hero",
+          "type": "hero",
+          "variant": "split",
+          "order": 0,
+          "anchor": "inicio",
+          "label": "Industria nacional",
+          "content": {
+            "headline": "Piezas metalicas que aguantan el trabajo pesado",
+            "subheadline": "Mecanizado, corte y soldadura con tolerancias controladas.",
+            "body": "Trabajamos con industrias, constructoras y talleres de todo el pais. Cotizamos en 48 horas habiles.",
+            "primary_button": { "label": "Pedir cotizacion", "action": "anchor", "anchor": "contacto" },
+            "secondary_button": {
+              "label": "Escribir por WhatsApp",
+              "action": "whatsapp",
+              "whatsapp_message": "Hola, quisiera consultar por una pieza.",
+              "style": "whatsapp",
+              "icon": "whatsapp"
+            },
+            "image": { "src": "media/taller.jpg", "alt": "Operario mecanizando una pieza en torno", "source": "ai" },
+            "badge_title": "ISO 9001",
+            "badge_subtitle": "Proceso certificado"
+          }
+        },
+        {
+          "id": "sec_ambiental",
+          "type": "feature_list",
+          "variant": "bar",
+          "order": 1,
+          "background": "muted",
+          "content": {
+            "items": [
+              {
+                "icon": "leaf",
+                "title": "Reciclamos el 90% de nuestra chatarra",
+                "description": "Todo el descarte de produccion vuelve a fundicion a traves de proveedores habilitados."
+              }
+            ]
+          }
+        },
+        {
+          "id": "sec_nosotros",
+          "type": "media_text",
+          "variant": "image_right",
+          "order": 2,
+          "anchor": "nosotros",
+          "label": "Quienes somos",
+          "title": "Veinte anios haciendo piezas para la industria",
+          "content": {
+            "body": "<p>Empezamos como un taller de barrio y hoy fabricamos para plantas industriales en todo el pais.</p><p>Nuestro equipo combina oficio y control de calidad medido.</p>",
+            "image": { "src": "media/planta.jpg", "alt": "Vista general de la planta de produccion" },
+            "items": [
+              { "title": "Entrega en plazo", "description": "Cumplimos el plazo acordado o avisamos con anticipacion." },
+              { "title": "Trazabilidad", "description": "Cada lote queda registrado con su certificado de material." }
+            ],
+            "button": { "label": "Conocer mas", "action": "url", "url": "/nosotros" }
+          }
+        },
+        {
+          "id": "sec_stats",
+          "type": "stats",
+          "variant": "row",
+          "order": 3,
+          "content": {
+            "items": [
+              { "value": 20, "suffix": "+", "label": "Anios de trayectoria", "icon": "calendar" },
+              { "value": 350, "suffix": "+", "label": "Clientes atendidos", "icon": "users" },
+              { "value": 48, "suffix": "h", "label": "Tiempo de cotizacion", "icon": "clock" }
+            ],
+            "animate": true
+          }
+        },
+        {
+          "id": "sec_proceso",
+          "type": "feature_list",
+          "variant": "timeline",
+          "order": 4,
+          "anchor": "proceso",
+          "label": "Como trabajamos",
+          "title": "Del plano a la pieza en cuatro pasos",
+          "content": {
+            "items": [
+              { "icon": "message", "title": "Nos enviás el plano", "description": "Recibimos archivos en PDF, DWG o incluso una foto del croquis." },
+              { "icon": "chart", "title": "Cotizamos", "description": "Analizamos material, tolerancias y volumen. Respuesta en 48 horas." },
+              { "icon": "gear", "title": "Fabricamos", "description": "Mecanizado con control dimensional en cada etapa." },
+              { "icon": "truck", "title": "Entregamos", "description": "Retiro en planta o envio a todo el pais." }
+            ],
+            "numbered": true
+          }
+        },
+        {
+          "id": "sec_servicios",
+          "type": "entity_grid",
+          "variant": "card_full",
+          "order": 5,
+          "anchor": "servicios",
+          "label": "Capacidad industrial",
+          "title": "Nuestros servicios",
+          "background": "dark",
+          "content": {
+            "source": "manual",
+            "columns": 3,
+            "items": [
+              { "icon": "gear", "title": "Mecanizado CNC", "description": "Torno y fresa con control numerico para series y prototipos." },
+              { "icon": "tool", "title": "Corte y plegado", "description": "Chapa de hasta 12 mm con corte por plasma." },
+              { "icon": "bolt", "title": "Soldadura especializada", "description": "MIG, TIG y arco para acero, inoxidable y aluminio." }
+            ],
+            "button": { "label": "Ver todos los servicios", "action": "url", "url": "/servicios" }
+          }
+        },
+        {
+          "id": "sec_galeria",
+          "type": "gallery",
+          "variant": "grid",
+          "order": 6,
+          "label": "Instalaciones",
+          "title": "Nuestra planta",
+          "content": {
+            "columns": 3,
+            "lightbox": true,
+            "items": [
+              { "image": { "src": "media/g1.jpg", "alt": "Sector de mecanizado" }, "caption": "Sector de mecanizado" },
+              { "image": { "src": "media/g2.jpg", "alt": "Area de soldadura" }, "caption": "Area de soldadura" },
+              { "image": { "src": "media/g3.jpg", "alt": "Deposito de materia prima" }, "caption": "Deposito" }
+            ]
+          }
+        },
+        {
+          "id": "sec_video",
+          "type": "video",
+          "variant": "embed",
+          "order": 7,
+          "label": "Video",
+          "title": "Asi trabajamos",
+          "content": {
+            "video_url": "https://www.youtube.com/watch?v=ejemplo",
+            "caption": "Recorrido por la planta"
+          }
+        },
+        {
+          "id": "sec_testimonios",
+          "type": "testimonials",
+          "variant": "slider_dark",
+          "order": 8,
+          "background": "dark",
+          "content": {
+            "items": [
+              { "quote": "Nos resolvieron un repuesto que estaba discontinuado. La planta no paro.", "author": "Jefe de mantenimiento", "role": "Industria alimenticia", "rating": 5 },
+              { "quote": "Cumplen el plazo y avisan si algo se complica. Eso vale mucho.", "author": "Encargado de compras", "role": "Constructora" }
+            ],
+            "autoplay": true
+          }
+        },
+        {
+          "id": "sec_planes",
+          "type": "pricing_plans",
+          "variant": "cards",
+          "order": 9,
+          "label": "Modalidades",
+          "title": "Como podemos trabajar juntos",
+          "content": {
+            "items": [
+              {
+                "name": "Por pieza",
+                "tagline": "Trabajos puntuales",
+                "description": "Cotizacion cerrada por trabajo, ideal para repuestos y prototipos.",
+                "features": ["Cotizacion en 48 h", "Sin volumen minimo"],
+                "button": { "label": "Consultar", "action": "anchor", "anchor": "contacto" }
+              },
+              {
+                "name": "Contrato mensual",
+                "tagline": "Produccion continua",
+                "is_featured": true,
+                "description": "Capacidad reservada y precio acordado por volumen mensual.",
+                "features": ["Precio preferencial", "Prioridad de agenda", "Informe mensual"],
+                "button": { "label": "Hablemos", "action": "anchor", "anchor": "contacto" }
+              }
+            ],
+            "footer_note": "Los precios se definen segun material, tolerancia y volumen."
+          }
+        },
+        {
+          "id": "sec_faq",
+          "type": "faq",
+          "variant": "accordion_two_col",
+          "order": 10,
+          "anchor": "faq",
+          "label": "Respuestas",
+          "title": "Preguntas frecuentes",
+          "content": {
+            "items": [
+              { "question": "Cual es el plazo de entrega?", "answer": "<p>Depende del trabajo. Lo confirmamos junto con la cotizacion.</p>" },
+              { "question": "Trabajan con volumenes chicos?", "answer": "<p>Si. Hacemos desde una pieza unica hasta series de produccion.</p>" },
+              { "question": "Entregan al interior?", "answer": "<p>Si, coordinamos envio a todo el pais.</p>" }
+            ],
+            "layout_columns": 2
+          }
+        },
+        {
+          "id": "sec_cta",
+          "type": "cta_banner",
+          "variant": "dual",
+          "order": 11,
+          "background": "dark",
+          "title": "Tenés un plano listo?",
+          "content": {
+            "body": "Envianos el archivo y te devolvemos la cotizacion en 48 horas habiles.",
+            "primary_button": { "label": "Pedir cotizacion", "action": "anchor", "anchor": "contacto" },
+            "secondary_button": { "label": "Escribir por WhatsApp", "action": "whatsapp", "style": "whatsapp", "icon": "whatsapp" }
+          }
+        },
+        {
+          "id": "sec_contacto",
+          "type": "contact_form",
+          "variant": "form_map",
+          "order": 12,
+          "anchor": "contacto",
+          "label": "Hablemos",
+          "title": "Contactanos",
+          "subtitle": "Respondemos dentro del dia habil.",
+          "content": {
+            "fields": ["name", "company", "email", "phone", "message"],
+            "submit_label": "Enviar consulta",
+            "box_title": "Cotizacion sin costo",
+            "box_body": "Analizamos tu plano y te damos un precio cerrado sin compromiso.",
+            "show_map": true,
+            "show_socials": true,
+            "consent_required": true
+          }
+        }
+      ]
+    },
+    {
+      "slug": "nosotros",
+      "title": "Nosotros",
+      "order": 1,
+      "seo": {
+        "title": "Sobre Talleres Yvytu",
+        "description": "Veinte anios fabricando piezas metalicas para la industria paraguaya."
+      },
+      "sections": [
+        {
+          "id": "sec_ph_nosotros",
+          "type": "page_header",
+          "variant": "image",
+          "order": 0,
+          "background": "image",
+          "background_image": { "src": "media/header-nosotros.jpg", "alt": "Fachada de la planta" },
+          "content": {
+            "heading": "Nosotros",
+            "description": "Quienes somos y como llegamos hasta aca.",
+            "show_breadcrumb": true
+          }
+        },
+        {
+          "id": "sec_historia",
+          "type": "rich_text",
+          "variant": "default",
+          "order": 1,
+          "content": {
+            "body": "<h3>Nuestra historia</h3><p>Talleres Yvytu nacio en 2004 como un taller de dos personas.</p><p>Hoy somos un equipo de veinticinco y atendemos plantas industriales en todo el pais.</p>",
+            "width": "normal"
+          }
+        },
+        {
+          "id": "sec_mvv",
+          "type": "feature_list",
+          "variant": "cards",
+          "order": 2,
+          "label": "Nuestro norte",
+          "title": "Mision, vision y valores",
+          "content": {
+            "items": [
+              { "icon": "target", "title": "Mision", "description": "Fabricar piezas confiables que mantengan produciendo a la industria nacional." },
+              { "icon": "eye", "title": "Vision", "description": "Ser el taller de referencia en mecanizado de precision del pais." },
+              { "icon": "shield", "title": "Valores", "description": "Palabra cumplida, trabajo medido y trato directo." }
+            ],
+            "columns": 3
+          }
+        },
+        {
+          "id": "sec_cta_nosotros",
+          "type": "cta_banner",
+          "variant": "single",
+          "order": 3,
+          "title": "Querés conocer la planta?",
+          "content": {
+            "body": "Coordinamos una visita cuando te quede comodo.",
+            "primary_button": { "label": "Contactarnos", "action": "url", "url": "/inicio#contacto" }
+          }
+        }
+      ]
+    }
+  ]
+}
