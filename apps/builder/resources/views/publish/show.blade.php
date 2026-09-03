@@ -18,10 +18,11 @@
             @if($project->site->cms_email)
                 <div class="card" style="background:#f6f8ff;border-color:#c7d2fe">
                     <strong>Panel para autogestionar el sitio</strong>
-                    <p>Entrar: <a href="https://{{ $project->site->live_fqdn }}/cms" target="_blank">{{ $project->site->live_fqdn }}/cms</a></p>
-                    <p class="mut">Usuario: <code>{{ $project->site->cms_email }}</code><br>
-                        Contraseña: <code>{{ $project->site->cms_password }}</code></p>
-                    <p class="mut" style="font-size:12px">Guardala: se muestra acá para entregársela al cliente. Puede cambiarla desde el panel.</p>
+                    <p><a class="wf-link" href="{{ route('projects.cms', $project) }}" target="_blank"><span class="btn" style="padding:4px 10px;font-size:13px">Gestionar mi sitio ↗</span></a>
+                        <span class="mut">— entra sin pedir usuario ni contraseña</span></p>
+                    <p class="mut" style="font-size:12px">Acceso manual de respaldo — {{ $project->site->live_fqdn }}/cms ·
+                        usuario <code>{{ $project->site->cms_email }}</code> ·
+                        contraseña <code>{{ $project->site->cms_password }}</code></p>
                 </div>
             @endif
             @if($project->site->domain_status === 'compy_pending')

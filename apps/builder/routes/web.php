@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware(\App\Http\Middleware\EnsureProjectOwner::class)->group(function () {
         Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+        Route::get('/projects/{project}/cms', [ProjectController::class, 'cms'])->name('projects.cms');
 
         Route::prefix('projects/{project}/interview')->group(function () {
         Route::get('/', [InterviewController::class, 'show'])->name('interview');

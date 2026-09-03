@@ -10,8 +10,8 @@
         <div class="card">
             <strong><a href="{{ route('projects.show', $project) }}">{{ $project->name }}</a></strong>
             <div class="mut">{{ $project->status }} @if($project->site) · sitio: {{ $project->site->name }} @endif
-                @if($project->status === 'published' && $project->site?->cmsUrl())
-                    · <a href="{{ $project->site->cmsUrl() }}" target="_blank">Gestionar mi sitio ↗</a>
+                @if($project->status === 'published' && $project->site?->cms_email)
+                    · <a href="{{ route('projects.cms', $project) }}" target="_blank">Gestionar mi sitio ↗</a>
                 @endif
             </div>
         </div>

@@ -35,6 +35,7 @@ Route::post('/internal/sites/{site}/publish', MarkPublishedController::class)->n
 // Login del CMS.
 Route::get('/cms/login', [AuthController::class, 'show'])->name('login');
 Route::post('/cms/login', [AuthController::class, 'login'])->name('login.attempt');
+Route::get('/cms/sso', [AuthController::class, 'sso'])->name('login.sso');
 Route::post('/cms/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 // CMS. Formularios derivados del esquema; toda escritura valida antes de guardar.

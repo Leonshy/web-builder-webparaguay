@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Cms;
 
+use App\Cms\CmsSso;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -36,6 +38,29 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         return redirect()->intended(route('cms.index'));
+    }
+
+    /**
+     * Acceso directo desde el builder: token HMAC firmado con el secreto
+     * compartido. Sin token válido, cae al login normal.
+     */
+    public function sso(Request $request)
+    {
+        $data = CmsSso::verify((string) $request->query('t', ''));
+
+        if ($data === null) {
+            return redirect()->route('login')->withErrors(['email' => 'El enlace de acceso venció. Volvé a entrar desde la plataforma.']);
+        }
+
+        $user = User::firstOrCreate(
+            ['email' => $data['email']],
+            ['name' => $data['name'] ?? 'Dueño del sitio', 'password' => bin2hex(random_bytes(16))],
+        );
+
+        Auth::login($user, true);
+        $request->session()->regenerate();
+
+        return redirect()->route('cms.index');
     }
 
     public function logout(Request $request)

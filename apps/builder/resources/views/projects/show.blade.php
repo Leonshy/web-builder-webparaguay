@@ -14,8 +14,8 @@
             <p><a href="{{ route('interview.result', $project) }}">Ver el resultado y el preview</a>
                 @if($project->status === 'published')
                     · <a href="{{ route('publish.show', $project) }}">En línea ↗</a>
-                    @if($project->site?->cmsUrl())
-                        · <a class="wf-link" href="{{ $project->site->cmsUrl() }}" target="_blank"><span class="btn" style="padding:4px 10px;font-size:13px">Gestionar mi sitio ↗</span></a>
+                    @if($project->site?->cms_email)
+                        · <a class="wf-link" href="{{ route('projects.cms', $project) }}" target="_blank"><span class="btn" style="padding:4px 10px;font-size:13px">Gestionar mi sitio ↗</span></a>
                     @endif
                 @else
                     · <a class="wf-link" href="{{ route('publish.show', $project) }}"><span class="btn" style="padding:4px 10px;font-size:13px">Publicar</span></a>

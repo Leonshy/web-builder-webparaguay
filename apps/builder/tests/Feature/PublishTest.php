@@ -50,6 +50,33 @@ class PublishTest extends TestCase
         $this->assertSame($project->site->cms_password, $fake->created[0]['ownerPassword']);
     }
 
+    public function test_el_enlace_gestionar_mi_sitio_lleva_al_sso_del_cms(): void
+    {
+        config(['generation.site_runtime_token' => 'secreto-compartido']);
+        $project = $this->generatedProject();
+        $this->post(route('publish.store', $project), ['plan' => 'web', 'domain_kind' => 'subdomain'])->assertRedirect();
+        $project->refresh();
+
+        $res = $this->get(route('projects.cms', $project));
+        $target = $res->headers->get('Location');
+
+        $this->assertStringStartsWith('https://'.$project->site->live_fqdn.'/cms/sso?t=', $target);
+
+        // El token firmado por el builder valida con el mismo secreto.
+        $token = urldecode(explode('t=', $target, 2)[1]);
+        [$payloadB64, $sigB64] = explode('.', $token, 2);
+        $payload = base64_decode(strtr($payloadB64, '-_', '+/'));
+        $sig = base64_decode(strtr($sigB64, '-_', '+/'));
+        $this->assertTrue(hash_equals(hash_hmac('sha256', $payload, 'secreto-compartido', true), $sig));
+        $this->assertSame($project->site->cms_email, json_decode($payload, true)['email']);
+    }
+
+    public function test_gestionar_mi_sitio_da_404_si_no_esta_publicado(): void
+    {
+        $project = $this->generatedProject();
+        $this->get(route('projects.cms', $project))->assertNotFound();
+    }
+
     public function test_com_py_publica_en_subdominio_y_abre_tarea_de_backoffice(): void
     {
         $project = $this->generatedProject();

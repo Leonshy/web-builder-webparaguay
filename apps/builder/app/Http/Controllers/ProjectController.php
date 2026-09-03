@@ -54,6 +54,18 @@ class ProjectController extends Controller
         return view('projects.show', ['project' => $project]);
     }
 
+    /** Acceso directo al CMS del sitio publicado, sin re-loguear. */
+    public function cms(Project $project)
+    {
+        $this->authorizeProject($project);
+        $site = $project->site;
+
+        abort_unless($project->status === 'published' && $site?->live_fqdn && $site->cms_email, 404,
+            'Este proyecto todavía no tiene un sitio publicado para gestionar.');
+
+        return redirect()->away(\App\Publishing\CmsSso::url($site));
+    }
+
     private function authorizeProject(Project $project): void
     {
         abort_unless($project->organization_id === $this->org()->id, 404);
