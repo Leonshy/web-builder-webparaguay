@@ -81,7 +81,32 @@ final class ClaudeGenerator implements Generator
 
         $text = collect($response['content'] ?? [])->firstWhere('type', 'text')['text'] ?? '';
 
-        return $this->extractJson($text);
+        return $this->sanitize($this->extractJson($text));
+    }
+
+    /**
+     * Red de seguridad: el modelo a veces deja `image` con `src: ""` (placeholder
+     * que no valida). Como `image` es opcional en todo el contrato, se descarta
+     * cualquier objeto imagen sin `src` real.
+     *
+     * @param  array<string,mixed>  $node
+     * @return array<string,mixed>
+     */
+    private function sanitize(array $node): array
+    {
+        foreach ($node as $key => $value) {
+            if (! is_array($value)) {
+                continue;
+            }
+            if ($key === 'image' && trim((string) ($value['src'] ?? '')) === '') {
+                unset($node[$key]);
+
+                continue;
+            }
+            $node[$key] = $this->sanitize($value);
+        }
+
+        return $node;
     }
 
     /** @return array<string,mixed> */
@@ -136,8 +161,12 @@ final class ClaudeGenerator implements Generator
         7. `theme.typography.pairing`: exactamente el string del brief.
         8. No repitas el `title` del envelope dentro de `content`.
         9. Todo el texto en español paraguayo neutro, claro y concreto.
-        10. `image.alt` obligatorio y descriptivo (qué se ve), nunca el nombre
-            de archivo. Para imágenes usá `src: ""` si no hay una real.
+        10. NUNCA inventes imágenes. Si no tenés una URL real de imagen, OMITÍ
+            por completo el objeto `image` (no lo incluyas con `src` vacío) y
+            elegí una `variant` que no dependa de imagen (ej. hero `minimal` /
+            `centered`, media_text sin imagen). `src` nunca puede ser "".
+            Cuando SÍ haya imagen, `image.alt` es obligatorio y descriptivo
+            (qué se ve), nunca el nombre de archivo.
         11. `richtext` (campos `body`, `answer`): sólo `<p> <strong> <em> <ul>
             <ol> <li> <a> <br> <h3> <h4>`.
         12. `entity_grid` sólo con `source: "manual"` y `items`.
