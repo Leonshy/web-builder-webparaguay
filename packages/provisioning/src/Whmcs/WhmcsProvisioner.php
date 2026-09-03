@@ -49,7 +49,7 @@ final class WhmcsProvisioner implements SitePublisher
             throw new ProvisioningException('Falta WHMCS_PRODUCT_ID (el pid del producto de hosting).');
         }
 
-        $this->http ??= new Client(['base_uri' => rtrim($baseUrl, '/').'/', 'timeout' => 45]);
+        $this->http ??= new Client(['base_uri' => rtrim($baseUrl, '/').'/', 'timeout' => 45, 'http_errors' => false]);
     }
 
     public function publish(PublishInput $input): PublishResult
