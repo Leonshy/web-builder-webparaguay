@@ -151,8 +151,10 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
 
     private function issueLetsEncrypt(string $fqdn): void
     {
-        $res = $this->cli('plesk', [
-            'ext', 'letsencrypt', '--certificate',
+        // La extensión letsencrypt no tiene CLI propia; se corre su script con
+        // `extension --exec`.
+        $res = $this->cli('extension', [
+            '--exec', 'letsencrypt', 'cli.php',
             '-d', $fqdn,
             '-m', $this->letsencryptEmail,
         ]);

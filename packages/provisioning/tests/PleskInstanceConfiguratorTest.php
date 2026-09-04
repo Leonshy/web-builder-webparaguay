@@ -57,7 +57,7 @@ class PleskInstanceConfiguratorTest extends TestCase
             '/api/v2/cli/site/call',
             '/api/v2/cli/plesk/call',
             '/api/v2/cli/plesk/call',
-            '/api/v2/cli/plesk/call',
+            '/api/v2/cli/extension/call',
         ], $paths);
 
         // El .env va embebido en las acciones de deploy, con el token compartido.
