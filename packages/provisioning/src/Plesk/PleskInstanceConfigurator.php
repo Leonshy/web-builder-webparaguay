@@ -26,6 +26,8 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
     /** @var callable(string):array{code:int,output:string} */
     private $runner;
 
+    private ?SSH2 $ssh = null;
+
     public function __construct(
         private string $sshHost,
         private string $repoUrl,
@@ -190,22 +192,31 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
         ]);
     }
 
-    /** @return callable(string):array{code:int,output:string} */
+    /**
+     * Una sola conexión SSH reutilizada para todo el `configure()`: abrir una
+     * por comando fue lo que hacía crashear al proceso PHP.
+     *
+     * @return callable(string):array{code:int,output:string}
+     */
     private function sshRunner(): callable
     {
         return function (string $cmd): array {
-            $ssh = new SSH2($this->sshHost, $this->sshPort);
-            $auth = $this->sshPrivateKey !== ''
-                ? PublicKeyLoader::load($this->keyMaterial())
-                : $this->sshPassword;
+            if ($this->ssh === null) {
+                $this->ssh = new SSH2($this->sshHost, $this->sshPort);
+                $this->ssh->setTimeout(60);
+                $auth = $this->sshPrivateKey !== ''
+                    ? PublicKeyLoader::load($this->keyMaterial())
+                    : $this->sshPassword;
 
-            if (! $ssh->login($this->sshUser, $auth)) {
-                throw new ProvisioningException("SSH: no se pudo autenticar en {$this->sshHost} como {$this->sshUser}.");
+                if (! $this->ssh->login($this->sshUser, $auth)) {
+                    $this->ssh = null;
+                    throw new ProvisioningException("SSH: no se pudo autenticar en {$this->sshHost} como {$this->sshUser}.");
+                }
             }
 
-            $output = $ssh->exec($cmd);
+            $output = $this->ssh->exec($cmd);
 
-            return ['code' => $ssh->getExitStatus() ?: 0, 'output' => (string) $output];
+            return ['code' => $this->ssh->getExitStatus() ?: 0, 'output' => (string) $output];
         };
     }
 
