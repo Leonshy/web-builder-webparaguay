@@ -108,8 +108,8 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             "{$this->phpBin} artisan config:cache",
         ]);
 
-        $res = $this->cli('extension', [
-            '--exec', 'git', '--create',
+        $res = $this->cli('plesk', [
+            'ext', 'git', '--create',
             '-domain', $fqdn,
             '-name', 'site-runtime',
             '-repository', $this->repoUrl,
@@ -126,8 +126,8 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
 
     private function deployGit(string $fqdn): void
     {
-        $res = $this->cli('extension', [
-            '--exec', 'git', '--deploy',
+        $res = $this->cli('plesk', [
+            'ext', 'git', '--deploy',
             '-domain', $fqdn,
             '-name', 'site-runtime',
         ]);
@@ -139,8 +139,8 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
 
     private function issueLetsEncrypt(string $fqdn): void
     {
-        $res = $this->cli('extension', [
-            '--exec', 'letsencrypt', '--certificate',
+        $res = $this->cli('plesk', [
+            'ext', 'letsencrypt', '--certificate',
             '-d', $fqdn,
             '-m', $this->letsencryptEmail,
         ]);
