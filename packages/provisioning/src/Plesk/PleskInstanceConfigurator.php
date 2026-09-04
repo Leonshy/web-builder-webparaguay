@@ -97,10 +97,13 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
 
     private function configureGit(string $fqdn, string $envBlock): void
     {
+        // Plesk corre cada línea de -actions como un comando suelto (no un
+        // script): un heredoc multilínea no funciona. El .env va en base64,
+        // en una sola línea.
+        $envB64 = base64_encode($envBlock);
+
         $actions = implode("\n", [
-            "cat > .env <<'ENVEOF'",
-            $envBlock,
-            'ENVEOF',
+            "printf '%s' {$this->arg($envB64)} | base64 -d > .env",
             // Plesk deja un index.html placeholder en el docroot al crear la
             // suscripción; tapa el index.php de Laravel si no se borra.
             'rm -f public/index.html',

@@ -54,9 +54,14 @@ class PleskInstanceConfiguratorTest extends TestCase
         $this->assertStringContainsString('plesk ext git --deploy', $this->ran[4]);
         $this->assertStringContainsString('extension --exec letsencrypt cli.php', $this->ran[5]);
 
-        // El .env con el token compartido va embebido en las acciones de deploy.
-        $this->assertStringContainsString('SITE_RUNTIME_INTERNAL_TOKEN=tok-shared', $this->ran[3]);
-        $this->assertStringContainsString('APP_URL=https://panaderia7.sites.naranja.com.py', $this->ran[3]);
+        // El .env va en base64 (Plesk corre cada línea de -actions suelta: un
+        // heredoc multilínea no sobrevive), con el token compartido adentro.
+        $this->assertStringNotContainsString('<<', $this->ran[3]);
+        $this->assertStringContainsString('base64 -d > .env', $this->ran[3]);
+        preg_match('/([A-Za-z0-9+\/=]{40,})/', $this->ran[3], $m);
+        $envBlock = base64_decode($m[1]);
+        $this->assertStringContainsString('SITE_RUNTIME_INTERNAL_TOKEN=tok-shared', $envBlock);
+        $this->assertStringContainsString('APP_URL=https://panaderia7.sites.naranja.com.py', $envBlock);
     }
 
     public function test_una_base_de_datos_ya_existente_se_recrea(): void
