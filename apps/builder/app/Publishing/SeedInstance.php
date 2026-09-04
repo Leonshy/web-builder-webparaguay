@@ -62,15 +62,20 @@ final class SeedInstance
             return true;
         }
 
+        $plesk = app(InstanceConfigurator::class);
+
         try {
-            app(InstanceConfigurator::class)->configure($site->live_fqdn);
+            $plesk->configure($site->live_fqdn);
+            \Log::info('Plesk configure OK '.$site->live_fqdn, ['transcript' => $plesk->transcript ?? []]);
             $site->update(['instance_configured_at' => now()]);
 
             return true;
         } catch (Throwable $e) {
+            $transcript = implode("\n", $plesk->transcript ?? []);
+            \Log::warning('Plesk configure FALLÓ '.$site->live_fqdn, ['error' => $e->getMessage(), 'transcript' => $transcript]);
             $project->backofficeTasks()->updateOrCreate(
                 ['kind' => 'configure_instance', 'status' => 'open'],
-                ['note' => "Aprovisionar {$site->live_fqdn} en Plesk: {$e->getMessage()}"],
+                ['note' => "Aprovisionar {$site->live_fqdn} en Plesk: {$e->getMessage()}\n\n{$transcript}"],
             );
 
             return false;

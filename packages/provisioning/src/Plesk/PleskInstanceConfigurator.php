@@ -19,6 +19,9 @@ use Webparaguay\Provisioning\ProvisioningException;
  */
 final class PleskInstanceConfigurator implements InstanceConfigurator
 {
+    /** @var array<int,string> registro de cada llamada CLI, para diagnóstico */
+    public array $transcript = [];
+
     public function __construct(
         private string $baseUrl,
         private string $apiKey,
@@ -170,11 +173,21 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             throw new ProvisioningException("Plesk API {$utility} devolvió HTTP {$status}: ".json_encode($body));
         }
 
-        return [
+        $result = [
             'code' => (int) ($body['code'] ?? 1),
             'stdout' => (string) ($body['stdout'] ?? ''),
             'stderr' => (string) ($body['stderr'] ?? ''),
         ];
+
+        $this->transcript[] = sprintf(
+            "%s %s -> code=%d %s",
+            $utility,
+            implode(' ', array_map(fn ($p) => str_contains($p, "\n") ? '<multiline>' : $p, $params)),
+            $result['code'],
+            trim($result['stdout'].' '.$result['stderr']),
+        );
+
+        return $result;
     }
 
     private function envBlock(string $fqdn, string $appKey, string $db, string $dbUser, string $dbPass): string
