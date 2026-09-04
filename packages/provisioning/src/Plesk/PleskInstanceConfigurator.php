@@ -73,34 +73,27 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
 
     private function createDatabase(string $fqdn, string $db, string $user, string $pass): void
     {
-        $create = $this->cli('database', [
+        $params = [
             '--create', $db,
             '-domain', $fqdn,
             '-type', 'mysql',
             '-server', $this->dbServer,
-        ]);
-        if ($create['code'] !== 0 && ! $this->mentions($create, 'already exist')) {
-            throw $this->fail('crear la base de datos', $create);
+            '-add-user', $user,
+            '-passwd', $pass,
+        ];
+
+        $res = $this->cli('database', $params);
+
+        // En un reintento la BD ya existe (y con otra contraseña). Como un sitio
+        // recién publicado tiene la BD vacía, se borra y se recrea limpia, así
+        // la contraseña coincide con la del `.env`.
+        if ($res['code'] !== 0 && $this->mentions($res, 'already exist')) {
+            $this->cli('database', ['--remove', $db, '-domain', $fqdn]);
+            $res = $this->cli('database', $params);
         }
 
-        // El usuario de la BD se maneja con la utilidad `database-user`. Se crea
-        // y, si ya existía, se re-sincroniza la contraseña con la del .env.
-        $userRes = $this->cli('database-user', [
-            '--create', $user,
-            '-passwd', $pass,
-            '-database', $db,
-            '-domain', $fqdn,
-        ]);
-        if ($userRes['code'] !== 0 && $this->mentions($userRes, 'already exist')) {
-            $userRes = $this->cli('database-user', [
-                '--update', $user,
-                '-passwd', $pass,
-                '-database', $db,
-                '-domain', $fqdn,
-            ]);
-        }
-        if ($userRes['code'] !== 0) {
-            throw $this->fail('crear el usuario de la base de datos', $userRes);
+        if ($res['code'] !== 0) {
+            throw $this->fail('crear la base de datos', $res);
         }
     }
 

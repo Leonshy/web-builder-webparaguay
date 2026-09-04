@@ -45,16 +45,15 @@ class PleskInstanceConfiguratorTest extends TestCase
 
     public function test_recorre_los_pasos_de_aprovisionamiento(): void
     {
-        $out = $this->configurator(new MockHandler(array_fill(0, 6, $this->ok())))
+        $out = $this->configurator(new MockHandler(array_fill(0, 5, $this->ok())))
             ->configure('panaderia7.sites.naranja.com.py');
 
         $this->assertSame('panaderia7', $out['db']);
-        $this->assertCount(6, $this->sent);
+        $this->assertCount(5, $this->sent);
 
         $paths = array_map(fn (Request $r) => $r->getUri()->getPath(), $this->sent);
         $this->assertSame([
             '/api/v2/cli/database/call',
-            '/api/v2/cli/database-user/call',
             '/api/v2/cli/site/call',
             '/api/v2/cli/plesk/call',
             '/api/v2/cli/plesk/call',
@@ -62,7 +61,7 @@ class PleskInstanceConfiguratorTest extends TestCase
         ], $paths);
 
         // El .env va embebido en las acciones de deploy, con el token compartido.
-        $gitBody = json_decode((string) $this->sent[3]->getBody(), true);
+        $gitBody = json_decode((string) $this->sent[2]->getBody(), true);
         $actions = end($gitBody['params']);
         $this->assertStringContainsString('SITE_RUNTIME_INTERNAL_TOKEN=tok-shared', $actions);
         $this->assertStringContainsString('APP_URL=https://panaderia7.sites.naranja.com.py', $actions);
@@ -73,12 +72,12 @@ class PleskInstanceConfiguratorTest extends TestCase
     {
         $exists = new Response(200, [], json_encode(['code' => 1, 'stdout' => '', 'stderr' => 'already exist']));
 
-        // db exists -> user exists -> user update -> site -> git create -> git deploy -> LE
-        $out = $this->configurator(new MockHandler([$exists, $exists, $this->ok(), $this->ok(), $this->ok(), $this->ok(), $this->ok()]))
+        // create(exists) -> remove -> create -> site -> git create -> git deploy -> LE
+        $out = $this->configurator(new MockHandler([$exists, $this->ok(), $this->ok(), $this->ok(), $this->ok(), $this->ok(), $this->ok()]))
             ->configure('x9.sites.naranja.com.py');
 
         $this->assertSame('x9', $out['db']);
-        $this->assertStringContainsString('--update', (string) $this->sent[2]->getBody());
+        $this->assertStringContainsString('--remove', (string) $this->sent[1]->getBody());
     }
 
     public function test_un_error_real_de_plesk_aborta(): void
