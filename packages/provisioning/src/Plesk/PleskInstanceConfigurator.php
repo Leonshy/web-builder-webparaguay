@@ -73,18 +73,34 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
 
     private function createDatabase(string $fqdn, string $db, string $user, string $pass): void
     {
-        $res = $this->cli('database', [
+        $create = $this->cli('database', [
             '--create', $db,
             '-domain', $fqdn,
             '-type', 'mysql',
             '-server', $this->dbServer,
-            '-add-user', $user,
-            '-passwd', $pass,
         ]);
+        if ($create['code'] !== 0 && ! $this->mentions($create, 'already exist')) {
+            throw $this->fail('crear la base de datos', $create);
+        }
 
-        // "already exists" no es fatal en un reintento.
-        if ($res['code'] !== 0 && ! $this->mentions($res, 'already exists')) {
-            throw $this->fail('crear la base de datos', $res);
+        // El usuario de la BD se maneja con la utilidad `database-user`. Se crea
+        // y, si ya existía, se re-sincroniza la contraseña con la del .env.
+        $userRes = $this->cli('database-user', [
+            '--create', $user,
+            '-passwd', $pass,
+            '-database', $db,
+            '-domain', $fqdn,
+        ]);
+        if ($userRes['code'] !== 0 && $this->mentions($userRes, 'already exist')) {
+            $userRes = $this->cli('database-user', [
+                '--update', $user,
+                '-passwd', $pass,
+                '-database', $db,
+                '-domain', $fqdn,
+            ]);
+        }
+        if ($userRes['code'] !== 0) {
+            throw $this->fail('crear el usuario de la base de datos', $userRes);
         }
     }
 
@@ -119,7 +135,7 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             '-actions', $actions,
         ]);
 
-        if ($res['code'] !== 0 && ! $this->mentions($res, 'already exists')) {
+        if ($res['code'] !== 0 && ! $this->mentions($res, 'already exist')) {
             throw $this->fail('configurar el repositorio git', $res);
         }
     }

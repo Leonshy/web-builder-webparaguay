@@ -38,5 +38,7 @@
         <env name="WHMCS_URL" value=""/>
         <env name="WHMCS_IDENTIFIER" value=""/>
         <env name="WHMCS_SECRET" value=""/>
+        <env name="PLESK_URL" value=""/>
+        <env name="PLESK_API_KEY" value=""/>
     </php>
 </phpunit>
