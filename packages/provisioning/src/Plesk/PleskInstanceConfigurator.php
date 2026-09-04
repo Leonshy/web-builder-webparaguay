@@ -101,6 +101,9 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             "cat > .env <<'ENVEOF'",
             $envBlock,
             'ENVEOF',
+            // Plesk deja un index.html placeholder en el docroot al crear la
+            // suscripción; tapa el index.php de Laravel si no se borra.
+            'rm -f public/index.html',
             "{$this->phpBin} artisan migrate --force",
             "{$this->phpBin} artisan config:cache",
         ]);
