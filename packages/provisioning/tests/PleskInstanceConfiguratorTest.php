@@ -44,18 +44,19 @@ class PleskInstanceConfiguratorTest extends TestCase
         $out = $this->configurator([])->configure('panaderia7.sites.naranja.com.py');
 
         $this->assertSame('panaderia7', $out['db']);
-        $this->assertCount(5, $this->ran);
+        $this->assertCount(6, $this->ran);
 
         $this->assertStringContainsString('plesk bin database --create', $this->ran[0]);
         $this->assertStringContainsString('-www-root /httpdocs/public', $this->ran[1]);
         $this->assertStringContainsString('plesk ext git --create', $this->ran[2]);
-        $this->assertStringContainsString("-active-branch 'site-runtime-v0.1.0'", $this->ran[2]);
-        $this->assertStringContainsString('plesk ext git --deploy', $this->ran[3]);
-        $this->assertStringContainsString('extension --exec letsencrypt cli.php', $this->ran[4]);
+        $this->assertStringContainsString('plesk ext git --update', $this->ran[3]);
+        $this->assertStringContainsString("-active-branch 'site-runtime-v0.1.0'", $this->ran[3]);
+        $this->assertStringContainsString('plesk ext git --deploy', $this->ran[4]);
+        $this->assertStringContainsString('extension --exec letsencrypt cli.php', $this->ran[5]);
 
         // El .env con el token compartido va embebido en las acciones de deploy.
-        $this->assertStringContainsString('SITE_RUNTIME_INTERNAL_TOKEN=tok-shared', $this->ran[2]);
-        $this->assertStringContainsString('APP_URL=https://panaderia7.sites.naranja.com.py', $this->ran[2]);
+        $this->assertStringContainsString('SITE_RUNTIME_INTERNAL_TOKEN=tok-shared', $this->ran[3]);
+        $this->assertStringContainsString('APP_URL=https://panaderia7.sites.naranja.com.py', $this->ran[3]);
     }
 
     public function test_una_base_de_datos_ya_existente_se_recrea(): void

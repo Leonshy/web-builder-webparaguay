@@ -117,14 +117,13 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             throw $this->fail('configurar el repositorio git', $res);
         }
 
-        // Si ya existía, re-sincronizar la rama y las acciones.
-        if ($res['code'] !== 0) {
-            $this->run(
-                "plesk ext git --update -domain {$this->arg($fqdn)} -name site-runtime"
-                ." -active-branch {$this->arg($this->branch)} -run-actions true -actions {$this->arg($actions)}",
-                'actualizar el repositorio git',
-            );
-        }
+        // `--create` ignora `-active-branch` (clona la rama por defecto del
+        // repo). Se fija explícitamente con `--update`, siempre, exista o no.
+        $this->run(
+            "plesk ext git --update -domain {$this->arg($fqdn)} -name site-runtime"
+            ." -active-branch {$this->arg($this->branch)} -run-actions true -actions {$this->arg($actions)}",
+            'fijar la rama del repositorio git',
+        );
     }
 
     /** Corre un comando y aborta si falla. */
