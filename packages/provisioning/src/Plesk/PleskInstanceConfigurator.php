@@ -69,6 +69,10 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             "plesk ext git --deploy -domain {$this->arg($fqdn)} -name site-runtime",
             'desplegar el repositorio git',
         );
+        // El checkout real corre en una tarea asíncrona de Plesk: `--deploy`
+        // vuelve antes de que termine. Sin esperar, se pisa con el checkout en
+        // curso (el .env que se escribe después queda borrado).
+        $this->waitForCheckout($fqdn);
         // Las "post-deploy actions" de la extensión Git de Plesk no se
         // ejecutan de forma confiable (probado contra el servidor real): el
         // .env y `artisan` se corren acá, directo, como el usuario del sitio.
@@ -120,6 +124,26 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             ." -active-branch {$this->arg($this->branch)}",
             'fijar la rama del repositorio git',
         );
+    }
+
+    /**
+     * Espera a que la tarea asíncrona de checkout de Plesk termine (hasta que
+     * aparece `artisan` en el deployment path). Si no aparece, el llamador
+     * reintenta en el próximo ciclo de `builder:seed-pending`.
+     */
+    private function waitForCheckout(string $fqdn): void
+    {
+        // El checkout inicial tardó hasta ~40s en las pruebas contra el
+        // servidor real; se da margen hasta ~90s.
+        for ($i = 0; $i < 18; $i++) {
+            $res = $this->exec("test -f /var/www/vhosts/{$fqdn}/httpdocs/artisan && echo yes || echo no");
+            if (trim($res['output']) === 'yes') {
+                return;
+            }
+            sleep(5);
+        }
+
+        throw new ProvisioningException("El checkout de site-runtime en {$fqdn} no terminó a tiempo (tarea asíncrona de Plesk).");
     }
 
     /**
