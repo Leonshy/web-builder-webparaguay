@@ -62,11 +62,15 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             "plesk bin site --update {$this->arg($fqdn)} -www-root /httpdocs/public",
             'fijar el document root',
         );
-        $this->configureGit($fqdn, $this->envBlock($fqdn, $appKey, $db, $user, $pass));
+        $this->configureGit($fqdn);
         $this->run(
             "plesk ext git --deploy -domain {$this->arg($fqdn)} -name site-runtime",
             'desplegar el repositorio git',
         );
+        // Las "post-deploy actions" de la extensión Git de Plesk no se
+        // ejecutan de forma confiable (probado contra el servidor real): el
+        // .env y `artisan` se corren acá, directo, como el usuario del sitio.
+        $this->finalizeApp($fqdn, $this->envBlock($fqdn, $appKey, $db, $user, $pass));
         $this->run(
             "plesk bin extension --exec letsencrypt cli.php -d {$this->arg($fqdn)} -m {$this->arg($this->letsencryptEmail)}",
             'emitir el certificado Let\'s Encrypt',
@@ -95,27 +99,11 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
         }
     }
 
-    private function configureGit(string $fqdn, string $envBlock): void
+    private function configureGit(string $fqdn): void
     {
-        // Plesk corre cada línea de -actions como un comando suelto (no un
-        // script): un heredoc multilínea no funciona. El .env va en base64,
-        // en una sola línea.
-        $envB64 = base64_encode($envBlock);
-
-        $actions = implode("\n", [
-            "printf '%s' {$this->arg($envB64)} | base64 -d > .env",
-            // Plesk deja un index.html placeholder en el docroot al crear la
-            // suscripción; tapa el index.php de Laravel si no se borra.
-            'rm -f public/index.html',
-            "{$this->phpBin} artisan migrate --force",
-            "{$this->phpBin} artisan config:cache",
-        ]);
-
         $cmd = "plesk ext git --create -domain {$this->arg($fqdn)} -name site-runtime"
             ." -remote-url {$this->arg($this->repoUrl)}"
-            ." -active-branch {$this->arg($this->branch)}"
-            .' -deployment-path /httpdocs -deployment-mode auto'
-            ." -run-actions true -actions {$this->arg($actions)}";
+            .' -deployment-path /httpdocs -deployment-mode auto';
 
         $res = $this->exec($cmd);
 
@@ -127,8 +115,36 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
         // repo). Se fija explícitamente con `--update`, siempre, exista o no.
         $this->run(
             "plesk ext git --update -domain {$this->arg($fqdn)} -name site-runtime"
-            ." -active-branch {$this->arg($this->branch)} -run-actions true -actions {$this->arg($actions)}",
+            ." -active-branch {$this->arg($this->branch)}",
             'fijar la rama del repositorio git',
+        );
+    }
+
+    /**
+     * Escribe el `.env` y prepara Laravel, corriendo como el usuario del
+     * sistema del sitio (no root: los archivos deben quedar con sus permisos).
+     */
+    private function finalizeApp(string $fqdn, string $envBlock): void
+    {
+        $sysuser = trim($this->exec("stat -c '%U' /var/www/vhosts/{$fqdn}")['output']);
+        if ($sysuser === '') {
+            throw new ProvisioningException("No se pudo determinar el usuario del sistema para {$fqdn}.");
+        }
+
+        $envB64 = base64_encode($envBlock);
+        $script = implode(' && ', [
+            'cd httpdocs',
+            "printf '%s' {$this->arg($envB64)} | base64 -d > .env",
+            // Plesk deja un index.html placeholder en el docroot al crear la
+            // suscripción; tapa el index.php de Laravel si no se borra.
+            'rm -f public/index.html',
+            "{$this->phpBin} artisan migrate --force",
+            "{$this->phpBin} artisan config:cache",
+        ]);
+
+        $this->run(
+            "su -s /bin/bash {$this->arg($sysuser)} -c ".$this->arg("cd /var/www/vhosts/{$fqdn} && {$script}"),
+            'preparar la aplicación (.env / migrate / config:cache)',
         );
     }
 

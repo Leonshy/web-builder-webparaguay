@@ -21,6 +21,10 @@ class PleskInstanceConfiguratorTest extends TestCase
         $runner = function (string $cmd) use (&$queue, $responses): array {
             $this->ran[] = $cmd;
 
+            if (str_starts_with($cmd, "stat -c '%U'")) {
+                return ['code' => 0, 'output' => 'siteuser'];
+            }
+
             if (is_callable($responses)) {
                 return $responses($cmd);
             }
@@ -44,7 +48,7 @@ class PleskInstanceConfiguratorTest extends TestCase
         $out = $this->configurator([])->configure('panaderia7.sites.naranja.com.py');
 
         $this->assertSame('panaderia7', $out['db']);
-        $this->assertCount(6, $this->ran);
+        $this->assertCount(8, $this->ran);
 
         $this->assertStringContainsString('plesk bin database --create', $this->ran[0]);
         $this->assertStringContainsString('-www-root /httpdocs/public', $this->ran[1]);
@@ -52,13 +56,16 @@ class PleskInstanceConfiguratorTest extends TestCase
         $this->assertStringContainsString('plesk ext git --update', $this->ran[3]);
         $this->assertStringContainsString("-active-branch 'site-runtime-v0.1.0'", $this->ran[3]);
         $this->assertStringContainsString('plesk ext git --deploy', $this->ran[4]);
-        $this->assertStringContainsString('extension --exec letsencrypt cli.php', $this->ran[5]);
+        $this->assertStringStartsWith("stat -c '%U'", $this->ran[5]);
+        $this->assertStringContainsString("su -s /bin/bash 'siteuser' -c", $this->ran[6]);
+        $this->assertStringContainsString('extension --exec letsencrypt cli.php', $this->ran[7]);
 
-        // El .env va en base64 (Plesk corre cada línea de -actions suelta: un
-        // heredoc multilínea no sobrevive), con el token compartido adentro.
-        $this->assertStringNotContainsString('<<', $this->ran[3]);
-        $this->assertStringContainsString('base64 -d > .env', $this->ran[3]);
-        preg_match('/([A-Za-z0-9+\/=]{40,})/', $this->ran[3], $m);
+        // El .env va en base64, en una sola línea (no un heredoc: las
+        // "post-deploy actions" de Plesk no se ejecutan de forma confiable),
+        // corrido directo como el usuario del sitio.
+        $this->assertStringNotContainsString('<<', $this->ran[6]);
+        $this->assertStringContainsString('base64 -d > .env', $this->ran[6]);
+        preg_match('/([A-Za-z0-9+\/=]{40,})/', $this->ran[6], $m);
         $envBlock = base64_decode($m[1]);
         $this->assertStringContainsString('SITE_RUNTIME_INTERNAL_TOKEN=tok-shared', $envBlock);
         $this->assertStringContainsString('APP_URL=https://panaderia7.sites.naranja.com.py', $envBlock);
