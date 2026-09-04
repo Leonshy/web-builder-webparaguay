@@ -29,14 +29,20 @@ return [
     'whmcs_cf_company' => (int) env('WHMCS_CF_COMPANY', 2), // id del campo 'Razón social'
 
     'plesk' => [
-        'url' => env('PLESK_URL', ''),
-        'api_key' => env('PLESK_API_KEY', ''),
         'service_plan' => env('PLESK_SERVICE_PLAN', 'IA-host'),
         'db_server' => env('PLESK_DB_SERVER', 'localhost'),
-        'verify_tls' => (bool) env('PLESK_VERIFY_TLS', false),
         'php_bin' => env('PLESK_PHP_BIN', '/opt/plesk/php/8.4/bin/php'),
         'letsencrypt_email' => env('PLESK_LETSENCRYPT_EMAIL', 'soporte@webparaguay.com'),
         // El repo debe ser clonable por el servidor sin llave (HTTPS público).
         'git_repo_url' => env('PLESK_GIT_REPO', 'https://github.com/Leonshy/web-builder-webparaguay.git'),
+        // El aprovisionamiento (git + Let's Encrypt) va por SSH: la API REST de
+        // Plesk no los cubre.
+        'ssh' => [
+            'host' => env('PLESK_SSH_HOST', ''),
+            'port' => (int) env('PLESK_SSH_PORT', 22),
+            'user' => env('PLESK_SSH_USER', 'root'),
+            'private_key' => env('PLESK_SSH_KEY', ''),   // ruta al archivo o PEM
+            'password' => env('PLESK_SSH_PASSWORD', ''),
+        ],
     ],
 ];

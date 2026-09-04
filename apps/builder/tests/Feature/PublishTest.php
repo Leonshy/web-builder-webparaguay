@@ -81,7 +81,7 @@ class PublishTest extends TestCase
 
     public function test_publicar_aprovisiona_la_instancia_de_plesk_una_sola_vez(): void
     {
-        config(['publishing.plesk.api_key' => 'key-test']);
+        config(['publishing.plesk.ssh.host' => 'plesk.test']);
         $plesk = new FakeInstanceConfigurator();
         $this->app->instance(InstanceConfigurator::class, $plesk);
 
@@ -101,7 +101,7 @@ class PublishTest extends TestCase
 
     public function test_si_plesk_no_esta_listo_queda_pendiente_y_se_reintenta(): void
     {
-        config(['publishing.plesk.api_key' => 'key-test']);
+        config(['publishing.plesk.ssh.host' => 'plesk.test']);
         $plesk = new FakeInstanceConfigurator();
         $plesk->fail = true;
         $this->app->instance(InstanceConfigurator::class, $plesk);

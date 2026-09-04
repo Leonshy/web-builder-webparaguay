@@ -12,8 +12,9 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "webparaguay/schema": "^0.1",
-        "webparaguay/provisioning": "^0.1"
+        "phpseclib/phpseclib": "^3.0",
+        "webparaguay/provisioning": "^0.1",
+        "webparaguay/schema": "^0.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

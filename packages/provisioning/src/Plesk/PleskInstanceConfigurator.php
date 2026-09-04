@@ -2,7 +2,8 @@
 
 namespace Webparaguay\Provisioning\Plesk;
 
-use GuzzleHttp\Client;
+use phpseclib3\Crypt\PublicKeyLoader;
+use phpseclib3\Net\SSH2;
 use Webparaguay\Provisioning\InstanceConfigurator;
 use Webparaguay\Provisioning\ProvisioningException;
 
@@ -11,88 +12,82 @@ use Webparaguay\Provisioning\ProvisioningException;
  * sirva el CMS: base de datos, document root, repositorio git en el tag del
  * site-runtime, `.env` y certificado Let's Encrypt.
  *
- * Todo se hace por la API REST de Plesk (pasarela de CLI `/api/v2/cli/*`), así
- * la plataforma sólo toca las suscripciones que creó — el servidor puede alojar
- * otros clientes sin que esto los afecte.
+ * Se hace por SSH corriendo los utilitarios `plesk bin` / `plesk ext` — la API
+ * REST de Plesk no cubre git ni Let's Encrypt. La plataforma sólo toca las
+ * suscripciones que nombra; el servidor puede alojar otros clientes.
  *
- * La API key va por env, con lista blanca de IP. No se ejercita en CI.
+ * Credenciales SSH por env, con lista blanca de IP. No se ejercita en CI.
  */
 final class PleskInstanceConfigurator implements InstanceConfigurator
 {
-    /** @var array<int,string> registro de cada llamada CLI, para diagnóstico */
+    /** @var array<int,string> registro de cada comando, para diagnóstico */
     public array $transcript = [];
 
+    /** @var callable(string):array{code:int,output:string} */
+    private $runner;
+
     public function __construct(
-        private string $baseUrl,
-        private string $apiKey,
+        private string $sshHost,
         private string $repoUrl,
         private string $branch,
         private string $sharedToken,
         private string $letsencryptEmail,
+        private int $sshPort = 22,
+        private string $sshUser = 'root',
+        private string $sshPrivateKey = '',   // PEM (contenido) o ruta a la llave
+        private string $sshPassword = '',
         private string $dbServer = 'localhost',
         private string $phpBin = '/opt/plesk/php/8.4/bin/php',
-        private bool $verifyTls = true,
-        private ?Client $http = null,
+        ?callable $runner = null,
     ) {
-        if ($this->baseUrl === '' || $this->apiKey === '') {
-            throw new ProvisioningException('Plesk no está configurado (PLESK_URL / PLESK_API_KEY).');
+        if ($this->sshHost === '' || ($this->sshPrivateKey === '' && $this->sshPassword === '')) {
+            throw new ProvisioningException('Plesk SSH no está configurado (PLESK_SSH_HOST + llave o contraseña).');
         }
 
-        $this->http ??= new Client([
-            'base_uri' => rtrim($baseUrl, '/').'/api/v2/',
-            'timeout' => 120,
-            'http_errors' => false,
-            // El panel suele responder en la IP con un cert que no matchea.
-            'verify' => $verifyTls,
-            'headers' => [
-                'X-API-Key' => $apiKey,
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-        ]);
+        $this->runner = $runner ?? $this->sshRunner();
     }
 
     /**
-     * Deja la instancia lista para recibir el sitio. Idempotente en lo posible:
-     * si algo ya existe, Plesk devuelve error y se ignora sólo cuando es seguro.
-     *
-     * @return array{db: string, db_user: string} datos creados (para el back-office)
+     * @return array{db: string, db_user: string}
      */
     public function configure(string $fqdn): array
     {
         $db = $this->slug($fqdn);
-        $dbUser = $db;
-        $dbPass = bin2hex(random_bytes(16));
+        $user = $db;
+        $pass = bin2hex(random_bytes(16));
         $appKey = 'base64:'.base64_encode(random_bytes(32));
 
-        $this->createDatabase($fqdn, $db, $dbUser, $dbPass);
-        $this->setDocumentRoot($fqdn);
-        $this->configureGit($fqdn, $this->envBlock($fqdn, $appKey, $db, $dbUser, $dbPass));
-        $this->deployGit($fqdn);
-        $this->issueLetsEncrypt($fqdn);
+        $this->createDatabase($fqdn, $db, $user, $pass);
+        $this->run(
+            "plesk bin site --update {$this->arg($fqdn)} -www-root /httpdocs/public",
+            'fijar el document root',
+        );
+        $this->configureGit($fqdn, $this->envBlock($fqdn, $appKey, $db, $user, $pass));
+        $this->run(
+            "plesk ext git --deploy -domain {$this->arg($fqdn)} -name site-runtime",
+            'desplegar el repositorio git',
+        );
+        $this->run(
+            "plesk bin extension --exec letsencrypt cli.php -d {$this->arg($fqdn)} -m {$this->arg($this->letsencryptEmail)}",
+            'emitir el certificado Let\'s Encrypt',
+        );
 
-        return ['db' => $db, 'db_user' => $dbUser];
+        return ['db' => $db, 'db_user' => $user];
     }
 
     private function createDatabase(string $fqdn, string $db, string $user, string $pass): void
     {
-        $params = [
-            '--create', $db,
-            '-domain', $fqdn,
-            '-type', 'mysql',
-            '-server', $this->dbServer,
-            '-add-user', $user,
-            '-passwd', $pass,
-        ];
+        $create = "plesk bin database --create {$this->arg($db)} -domain {$this->arg($fqdn)}"
+            ." -type mysql -server {$this->arg($this->dbServer)}"
+            ." -add-user {$this->arg($user)} -passwd {$this->arg($pass)}";
 
-        $res = $this->cli('database', $params);
+        $res = $this->exec($create);
 
-        // En un reintento la BD ya existe (y con otra contraseña). Como un sitio
-        // recién publicado tiene la BD vacía, se borra y se recrea limpia, así
-        // la contraseña coincide con la del `.env`.
-        if ($res['code'] !== 0 && $this->mentions($res, 'already exist')) {
-            $this->cli('database', ['--remove', $db, '-domain', $fqdn]);
-            $res = $this->cli('database', $params);
+        // En un reintento la BD ya existe (con otra contraseña). Un sitio recién
+        // publicado la tiene vacía: se borra y se recrea limpia.
+        if ($res['code'] !== 0 && $this->mentions($res, 'exist')) {
+            $this->exec("plesk bin database --remove {$this->arg($db)} -domain {$this->arg($fqdn)}");
+            $res = $this->exec($create);
         }
 
         if ($res['code'] !== 0) {
@@ -100,99 +95,63 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
         }
     }
 
-    private function setDocumentRoot(string $fqdn): void
-    {
-        $res = $this->cli('site', ['--update', $fqdn, '-www-root', '/httpdocs/public']);
-
-        if ($res['code'] !== 0) {
-            throw $this->fail('fijar el document root', $res);
-        }
-    }
-
     private function configureGit(string $fqdn, string $envBlock): void
     {
-        // Acciones de despliegue: escribir el .env (con los secretos ya
-        // resueltos) y preparar Laravel. El servidor NO corre composer/npm: el
-        // tag site-runtime-v* ya trae vendor/ y public/build/.
-        $actions = implode(' && ', [
-            "cat > .env <<'ENVEOF'\n{$envBlock}\nENVEOF",
+        $actions = implode("\n", [
+            "cat > .env <<'ENVEOF'",
+            $envBlock,
+            'ENVEOF',
             "{$this->phpBin} artisan migrate --force",
             "{$this->phpBin} artisan config:cache",
         ]);
 
-        $res = $this->cli('plesk', [
-            'ext', 'git', '--create',
-            '-domain', $fqdn,
-            '-name', 'site-runtime',
-            '-repository', $this->repoUrl,
-            '-deployment-path', '/httpdocs',
-            '-deployment-mode', 'auto',
-            '-branch', $this->branch,
-            '-actions', $actions,
-        ]);
+        $cmd = "plesk ext git --create -domain {$this->arg($fqdn)} -name site-runtime"
+            ." -remote-url {$this->arg($this->repoUrl)}"
+            ." -active-branch {$this->arg($this->branch)}"
+            .' -deployment-path /httpdocs -deployment-mode auto'
+            ." -run-actions true -actions {$this->arg($actions)}";
 
-        if ($res['code'] !== 0 && ! $this->mentions($res, 'already exist')) {
+        $res = $this->exec($cmd);
+
+        if ($res['code'] !== 0 && ! $this->mentions($res, 'exist')) {
             throw $this->fail('configurar el repositorio git', $res);
         }
-    }
 
-    private function deployGit(string $fqdn): void
-    {
-        $res = $this->cli('plesk', [
-            'ext', 'git', '--deploy',
-            '-domain', $fqdn,
-            '-name', 'site-runtime',
-        ]);
-
+        // Si ya existía, re-sincronizar la rama y las acciones.
         if ($res['code'] !== 0) {
-            throw $this->fail('desplegar el repositorio git', $res);
+            $this->run(
+                "plesk ext git --update -domain {$this->arg($fqdn)} -name site-runtime"
+                ." -active-branch {$this->arg($this->branch)} -run-actions true -actions {$this->arg($actions)}",
+                'actualizar el repositorio git',
+            );
         }
     }
 
-    private function issueLetsEncrypt(string $fqdn): void
+    /** Corre un comando y aborta si falla. */
+    private function run(string $cmd, string $step): void
     {
-        // La extensión letsencrypt no tiene CLI propia; se corre su script con
-        // `extension --exec`.
-        $res = $this->cli('extension', [
-            '--exec', 'letsencrypt', 'cli.php',
-            '-d', $fqdn,
-            '-m', $this->letsencryptEmail,
-        ]);
-
+        $res = $this->exec($cmd);
         if ($res['code'] !== 0) {
-            throw $this->fail('emitir el certificado Let\'s Encrypt', $res);
+            throw $this->fail($step, $res);
         }
     }
 
-    /** @return array{code:int,stdout:string,stderr:string} */
-    private function cli(string $utility, array $params): array
+    /** @return array{code:int,output:string} */
+    private function exec(string $cmd): array
     {
-        $response = $this->http->post("cli/{$utility}/call", ['json' => ['params' => $params]]);
-        $status = $response->getStatusCode();
-        $body = json_decode((string) $response->getBody(), true) ?? [];
-
-        if ($status >= 400 && ! isset($body['code'])) {
-            throw new ProvisioningException("Plesk API {$utility} devolvió HTTP {$status}: ".json_encode($body));
-        }
-
-        $result = [
-            'code' => (int) ($body['code'] ?? 1),
-            'stdout' => (string) ($body['stdout'] ?? ''),
-            'stderr' => (string) ($body['stderr'] ?? ''),
-        ];
-
+        $res = ($this->runner)($cmd);
+        $out = trim((string) ($res['output'] ?? ''));
         $this->transcript[] = sprintf(
-            "%s %s -> code=%d %s",
-            $utility,
-            implode(' ', array_map(fn ($p) => str_contains($p, "\n") ? '<multiline>' : $p, $params)),
-            $result['code'],
-            trim($result['stdout'].' '.$result['stderr']),
+            '%s -> code=%d %s',
+            preg_replace('/\s+/', ' ', substr($cmd, 0, 120)),
+            $res['code'] ?? -1,
+            substr($out, 0, 300),
         );
 
-        return $result;
+        return ['code' => (int) ($res['code'] ?? -1), 'output' => $out];
     }
 
-    private function envBlock(string $fqdn, string $appKey, string $db, string $dbUser, string $dbPass): string
+    private function envBlock(string $fqdn, string $appKey, string $db, string $user, string $pass): string
     {
         return implode("\n", [
             'APP_ENV=production',
@@ -202,12 +161,36 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
             'DB_CONNECTION=mysql',
             'DB_HOST=127.0.0.1',
             "DB_DATABASE={$db}",
-            "DB_USERNAME={$dbUser}",
-            "DB_PASSWORD={$dbPass}",
+            "DB_USERNAME={$user}",
+            "DB_PASSWORD={$pass}",
             "SITE_RUNTIME_INTERNAL_TOKEN={$this->sharedToken}",
             'SESSION_DRIVER=file',
             'CACHE_STORE=file',
         ]);
+    }
+
+    /** @return callable(string):array{code:int,output:string} */
+    private function sshRunner(): callable
+    {
+        return function (string $cmd): array {
+            $ssh = new SSH2($this->sshHost, $this->sshPort);
+            $auth = $this->sshPrivateKey !== ''
+                ? PublicKeyLoader::load($this->keyMaterial())
+                : $this->sshPassword;
+
+            if (! $ssh->login($this->sshUser, $auth)) {
+                throw new ProvisioningException("SSH: no se pudo autenticar en {$this->sshHost} como {$this->sshUser}.");
+            }
+
+            $output = $ssh->exec($cmd);
+
+            return ['code' => $ssh->getExitStatus() ?: 0, 'output' => (string) $output];
+        };
+    }
+
+    private function keyMaterial(): string
+    {
+        return is_file($this->sshPrivateKey) ? (string) file_get_contents($this->sshPrivateKey) : $this->sshPrivateKey;
     }
 
     private function slug(string $fqdn): string
@@ -217,16 +200,21 @@ final class PleskInstanceConfigurator implements InstanceConfigurator
         return substr(preg_replace('/[^a-z0-9]/', '', strtolower($label)) ?: 'site', 0, 24);
     }
 
-    /** @param array{stdout:string,stderr:string} $res */
-    private function mentions(array $res, string $needle): bool
+    private function arg(string $value): string
     {
-        return stripos($res['stdout'].$res['stderr'], $needle) !== false;
+        return escapeshellarg($value);
     }
 
-    /** @param array{code:int,stdout:string,stderr:string} $res */
+    /** @param array{output:string} $res */
+    private function mentions(array $res, string $needle): bool
+    {
+        return stripos($res['output'], $needle) !== false;
+    }
+
+    /** @param array{code:int,output:string} $res */
     private function fail(string $step, array $res): ProvisioningException
     {
-        $msg = trim($res['stderr'] ?: $res['stdout']) ?: "código {$res['code']}";
+        $msg = trim($res['output']) ?: "código {$res['code']}";
 
         return new ProvisioningException("Plesk: no se pudo {$step}. {$msg}");
     }

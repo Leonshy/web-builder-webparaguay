@@ -98,15 +98,17 @@ class AppServiceProvider extends ServiceProvider
             $p = config('publishing.plesk');
 
             return new PleskInstanceConfigurator(
-                baseUrl: (string) $p['url'],
-                apiKey: (string) $p['api_key'],
+                sshHost: (string) $p['ssh']['host'],
                 repoUrl: (string) $p['git_repo_url'],
                 branch: 'site-runtime-v'.config('publishing.runtime_version'),
                 sharedToken: (string) config('generation.site_runtime_token'),
                 letsencryptEmail: (string) $p['letsencrypt_email'],
+                sshPort: (int) $p['ssh']['port'],
+                sshUser: (string) $p['ssh']['user'],
+                sshPrivateKey: (string) $p['ssh']['private_key'],
+                sshPassword: (string) $p['ssh']['password'],
                 dbServer: (string) $p['db_server'],
                 phpBin: (string) $p['php_bin'],
-                verifyTls: (bool) $p['verify_tls'],
             );
         });
 

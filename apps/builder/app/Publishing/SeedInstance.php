@@ -5,6 +5,7 @@ namespace App\Publishing;
 use App\Generation\SiteRuntimeClient;
 use App\Models\Project;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 use Webparaguay\Provisioning\InstanceConfigurator;
 
@@ -58,7 +59,7 @@ final class SeedInstance
      */
     private function configureInstance(Project $project, $site): bool
     {
-        if ($site->instance_configured_at || ! config('publishing.plesk.api_key')) {
+        if ($site->instance_configured_at || ! config('publishing.plesk.ssh.host')) {
             return true;
         }
 
@@ -66,13 +67,13 @@ final class SeedInstance
 
         try {
             $plesk->configure($site->live_fqdn);
-            \Log::info('Plesk configure OK '.$site->live_fqdn, ['transcript' => $plesk->transcript ?? []]);
+            Log::info('Plesk configure OK '.$site->live_fqdn, ['transcript' => $plesk->transcript ?? []]);
             $site->update(['instance_configured_at' => now()]);
 
             return true;
         } catch (Throwable $e) {
             $transcript = implode("\n", $plesk->transcript ?? []);
-            \Log::warning('Plesk configure FALLÓ '.$site->live_fqdn, ['error' => $e->getMessage(), 'transcript' => $transcript]);
+            Log::warning('Plesk configure FALLÓ '.$site->live_fqdn, ['error' => $e->getMessage(), 'transcript' => $transcript]);
             $project->backofficeTasks()->updateOrCreate(
                 ['kind' => 'configure_instance', 'status' => 'open'],
                 ['note' => "Aprovisionar {$site->live_fqdn} en Plesk: {$e->getMessage()}\n\n{$transcript}"],
